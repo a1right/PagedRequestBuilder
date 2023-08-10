@@ -57,16 +57,15 @@ namespace EventStuff.Services
             var propertiesJson = JsonSerializer.Serialize(properties);
 
             //var sql = string.Format(EventQueries.PropertiesFilter, propertiesJson);
-            Console.WriteLine(query.FromSqlRaw(EventQueries.PropertiesFilterStatic, propertiesJson).ToQueryString());
+            Console.WriteLine(query.FromSqlRaw(EventQueries.PropertiesFilter, propertiesJson).ToQueryString());
 
-            return query.FromSqlRaw(EventQueries.PropertiesFilterStatic, propertiesJson);
+            return query.FromSqlRaw(EventQueries.PropertiesFilter, propertiesJson);
         }
     }
 
     public static class EventQueries
     {
-        public static string PropertiesFilter = "select * from \"Events\" e where \"Properties\" @> ''{0}''";
-        public static string PropertiesFilterStatic = $"select * from \"Events\" e where \"Properties\" @> {{0}}::jsonb";
+        public static string PropertiesFilter = $"select * from \"Events\" e where \"Properties\" @> {{0}}::jsonb";
     }
 
     public interface IEventService
