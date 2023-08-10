@@ -1,4 +1,5 @@
-using ExpressionFilters.Models;
+using EventStuff.Models;
+using EventStuff.Services;
 using GenericFilters;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("AppContext")));
         builder.Services.AddExpressionFilter();
+        builder.Services.AddScoped<IEventService, EventService>();
 
         var app = builder.Build();
 
@@ -46,31 +48,6 @@ public class Program
 
     private static void Seed(ApplicationContext context)
     {
-        var users = Enumerable.Range(1, 10).Select(x => new User()
-        {
-            Age = x * 10,
-            Name = $"User {x}",
-            Registered = DateTime.UtcNow.AddDays(-x)
-        });
-
-        context.Users.AddRange(users);
-        context.SaveChanges();
-
-        var organizations = new List<Organization>()
-        {
-            new()
-            {
-                Name = "Organization 1",
-                Users = users.Where(x => x.Age < 60).ToList(),
-            },
-            new()
-            {
-                Name = "Organization 2",
-                Users = users.Where(x => x.Age > 60).ToList(),
-            },
-        };
-
-        context.Organizations.AddRange(organizations);
 
         context.SaveChanges();
     }

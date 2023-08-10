@@ -45,7 +45,7 @@ namespace GenericFilters
         private Expression BuildQuerySimpleFilterEpression<T>(SimpleFilter filter, ParameterExpression parameter)
         {
             var left = Expression.PropertyOrField(parameter, filter.Property);
-
+            var test = Expression.PropertyOrField(left, "Count");
             return filter.Operator switch
             {
                 "$gt" => Expression.GreaterThan(left, Expression.Constant(Parse(filter.Value, typeof(T).GetProperty(filter.Property)))),
