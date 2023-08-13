@@ -1,14 +1,21 @@
-﻿using System;
+﻿using EventStuff.Attributes;
+using System;
 
 namespace EventStuff.Models
 {
     public class Example
     {
+        [PagedRequestKeyAttribute("id")]
         public int Id { get; set; }
+        [PagedRequestKeyAttribute("string")]
         public string String { get; set; }
+        [PagedRequestKeyAttribute("date")]
         public DateTime Date { get; set; }
+        [PagedRequestKeyAttribute("enum")]
         public ExampleEnum Enum { get; set; }
+        [PagedRequestKeyAttribute("decimal")]
         public decimal Decimal { get; set; }
+        [PagedRequestKeyAttribute("guid")]
         public Guid Guid { get; set; }
     }
     public enum ExampleEnum
@@ -18,7 +25,7 @@ namespace EventStuff.Models
         ExampleThree,
     }
 
-    public class ExampleFilter : GetPagedRequestBase<Example>
+    public class ExampleFilter : PagedRequestBase<Example>
     {
     }
 
@@ -29,5 +36,8 @@ namespace EventStuff.Models
         public ExampleEnum Enum { get; set; }
         public decimal Decimal { get; set; }
         public Guid Guid { get; set; }
+    }
+    public class GetPagedExampleRequest : PagedRequestBase<Example>
+    {
     }
 }

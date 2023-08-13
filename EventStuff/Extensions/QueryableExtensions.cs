@@ -1,4 +1,5 @@
-﻿using EventStuff.Models;
+﻿using EventStuff.Models.Filter;
+using EventStuff.Models.Sorter;
 using System.Collections.Generic;
 using System.Linq;
 

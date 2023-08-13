@@ -8,10 +8,10 @@ namespace ExpressionFilters.Controllers;
 [Route("[controller]")]
 public class ExamplesController : ControllerBase
 {
-    private readonly ApplicationContext _context;
+    private readonly ExampleContext _context;
     private readonly IExampleService _exampleService;
 
-    public ExamplesController(ApplicationContext context, IExampleService exampleService)
+    public ExamplesController(ExampleContext context, IExampleService exampleService)
     {
         _context = context;
         _exampleService = exampleService;

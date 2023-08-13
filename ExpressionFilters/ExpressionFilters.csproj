@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\EventStuff\EventStuff.csproj" />
-    <ProjectReference Include="..\GenericFilters\GenericFilters.csproj" />
   </ItemGroup>
 
   <ItemGroup>

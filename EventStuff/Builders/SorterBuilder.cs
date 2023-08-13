@@ -1,13 +1,21 @@
 ﻿using EventStuff.Models;
+using EventStuff.Models.Sorter;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace EventStuff.Builders
 {
-    public class SorterBuilder<T> : ISorterBuilder<T>
+    public class SorterBuilder<T> : ISorterBuilder<T> where T : class
     {
-        public IEnumerable<IQuerySorter<T>> BuildSorters(GetPagedRequestBase<T>? request)
+        private readonly IPagedRequestPropertyMapper _propertyMapper;
+
+        public SorterBuilder(IPagedRequestPropertyMapper propertyMapper)
+        {
+            _propertyMapper = propertyMapper;
+        }
+
+        public IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase<T>? request)
         {
             if (request is null or { Sorters: not { Count: > 0 } })
                 yield break;
@@ -27,7 +35,7 @@ namespace EventStuff.Builders
             try
             {
                 var parameter = Expression.Parameter(typeof(T), "x");
-                var typePropertyName = PagedRequestPropertyMapper.MapRequestNameToPropertyName<T>(entry.Property);
+                var typePropertyName = _propertyMapper.MapRequestNameToPropertyName<T>(entry.Property);
                 var propertySelector = Expression.PropertyOrField(parameter, typePropertyName);
                 var converted = Expression.Convert(propertySelector, typeof(object));
                 return Expression.Lambda<Func<T, object>>(converted, parameter);
@@ -40,8 +48,8 @@ namespace EventStuff.Builders
         }
     }
 
-    public interface ISorterBuilder<T>
+    public interface ISorterBuilder<T> where T : class
     {
-        IEnumerable<IQuerySorter<T>> BuildSorters(GetPagedRequestBase<T>? request);
+        IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase<T>? request);
     }
 }

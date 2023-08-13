@@ -1,7 +1,7 @@
 using EventStuff.Builders;
+using EventStuff.Extensions;
 using EventStuff.Models;
 using EventStuff.Services;
-using GenericFilters;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpressionFilters;
@@ -18,12 +18,9 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddDbContext<ApplicationContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("AppContext")));
-        builder.Services.AddExpressionFilter();
+        builder.Services.AddDbContext<ExampleContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("AppContext")));
         builder.Services.AddScoped<IExampleService, ExampleService>();
-        builder.Services.AddScoped(typeof(IFilterBuilder<>), typeof(FilterBuilder<>));
-        builder.Services.AddScoped(typeof(ISorterBuilder<>), typeof(SorterBuilder<>));
-        builder.Services.AddScoped<IPagedRequestValueParser, PagedRequestValueParser>();
+        builder.Services.AddPagedQueryBuilder();
 
         var app = builder.Build();
 
@@ -41,17 +38,18 @@ public class Program
         app.MapControllers();
 
         using var scope = app.Services.CreateScope();
-        using var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+        using var context = scope.ServiceProvider.GetRequiredService<ExampleContext>();
         context.Database.EnsureDeleted();
         var created = context.Database.EnsureCreated();
         if (created)
             Seed(context);
 
+        PagedQueryBuilder.Initialize();
         app.Run();
 
     }
 
-    private static void Seed(ApplicationContext context)
+    private static void Seed(ExampleContext context)
     {
         var daysShift = 0;
         for (var i = 0; i < 5; i++)

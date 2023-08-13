@@ -1,4 +1,5 @@
 ﻿using EventStuff.Models;
+using EventStuff.Models.Filter;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -8,12 +9,14 @@ namespace EventStuff.Builders
     public class FilterBuilder<T> : IFilterBuilder<T> where T : class
     {
         private readonly IPagedRequestValueParser _valueParser;
+        private readonly IPagedRequestPropertyMapper _propertyMapper;
 
-        public FilterBuilder(IPagedRequestValueParser valueParser)
+        public FilterBuilder(IPagedRequestValueParser valueParser, IPagedRequestPropertyMapper propertyMapper)
         {
             _valueParser = valueParser;
+            _propertyMapper = propertyMapper;
         }
-        public IEnumerable<IQueryFilter<T>> BuildFilters(GetPagedRequestBase<T>? request)
+        public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase<T>? request)
         {
             if (request is null or { Filters: not { Count: > 0 } })
                 yield break;
@@ -34,7 +37,7 @@ namespace EventStuff.Builders
             try
             {
                 var parameter = Expression.Parameter(typeof(T), "x");
-                var typePropertyName = PagedRequestPropertyMapper.MapRequestNameToPropertyName<T>(entry.Property);
+                var typePropertyName = _propertyMapper.MapRequestNameToPropertyName<T>(entry.Property);
                 var propertySelector = Expression.PropertyOrField(parameter, typePropertyName);
                 var assignablePropertyType = typeof(T).GetProperty(typePropertyName).PropertyType;
                 var constant = Expression.Constant(_valueParser.GetValue(entry.Value, assignablePropertyType));
@@ -65,6 +68,6 @@ namespace EventStuff.Builders
 
     public interface IFilterBuilder<T> where T : class
     {
-        IEnumerable<IQueryFilter<T>> BuildFilters(GetPagedRequestBase<T>? request);
+        IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase<T>? request);
     }
 }

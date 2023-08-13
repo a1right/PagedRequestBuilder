@@ -9,32 +9,24 @@ namespace EventStuff.Services
 {
     public class ExampleService : IExampleService
     {
-        private readonly ApplicationContext _context;
-        private readonly IFilterBuilder<Example> _filterBuilder;
-        private readonly ISorterBuilder<Example> _sorterBuilder;
+        private readonly ExampleContext _context;
+        private readonly IPagedQueryBuilder<Example> _queryBuilder;
 
-        public ExampleService(ApplicationContext context, IFilterBuilder<Example> filterBuilder, ISorterBuilder<Example> sorterBuilder)
+        public ExampleService(ExampleContext context, IPagedQueryBuilder<Example> queryBuilder)
         {
             _context = context;
-            _filterBuilder = filterBuilder;
-            _sorterBuilder = sorterBuilder;
+            _queryBuilder = queryBuilder;
         }
 
         public async Task<PagedResponse<ExampleDto>> GetPaged(GetPagedExampleRequest? request)
         {
             request ??= new();
+            var query = _context.Set<Example>();
+            var pagedQuery = _queryBuilder
+                .BuildQuery(query, request, true, 1, 100)
+                .Select(x => x.Map<Example, ExampleDto>());
 
-            var filters = _filterBuilder.BuildFilters(request);
-            var sorters = _sorterBuilder.BuildSorters(request);
-
-            var query = _context.Examples
-                .AsQueryable()
-                .Where(filters)
-                .OrderBy(sorters)
-                .Paginate(request.Size, request.Page)
-                .Select(x => x.MapTo<Example, ExampleDto>());
-
-            var data = await query.ToListAsync();
+            var data = await pagedQuery.ToListAsync();
             var total = await query.CountAsync();
 
             return data.ToPagedResponse(request.Page, request.Size, total);

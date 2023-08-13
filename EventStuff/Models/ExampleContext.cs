@@ -2,9 +2,9 @@
 
 namespace EventStuff.Models
 {
-    public class ApplicationContext : DbContext
+    public class ExampleContext : DbContext
     {
         public DbSet<Example> Examples { get; set; }
-        public ApplicationContext(DbContextOptions options) : base(options) { }
+        public ExampleContext(DbContextOptions options) : base(options) { }
     }
 }
