@@ -21,6 +21,5 @@ namespace EventStuff.Models
             get => _size ?? 10;
             set => _size = value;
         }
-
     }
 }

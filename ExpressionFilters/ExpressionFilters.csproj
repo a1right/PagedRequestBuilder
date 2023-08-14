@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EventStuff\EventStuff.csproj" />
+    <ProjectReference Include="..\EventStuff\PagedRequestBase.csproj" />
   </ItemGroup>
 
   <ItemGroup>

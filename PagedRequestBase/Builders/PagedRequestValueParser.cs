@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace EventStuff.Builders
 {
-    public class PagedRequestValueParser : IPagedRequestValueParser
+    internal class PagedRequestValueParser : IPagedRequestValueParser
     {
         public object? GetValue(JsonDocument document, Type assignablePropertyType)
         {
@@ -70,7 +70,7 @@ namespace EventStuff.Builders
         }
     }
 
-    public interface IPagedRequestValueParser
+    internal interface IPagedRequestValueParser
     {
         object? GetValue(JsonDocument document, Type assignablePropertyType);
     }

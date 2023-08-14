@@ -6,12 +6,12 @@ using System.Linq.Expressions;
 
 namespace EventStuff.Builders
 {
-    public class FilterBuilder<T> : IFilterBuilder<T> where T : class
+    internal class FilterBuilder<T> : IFilterBuilder<T> where T : class
     {
         private readonly IPagedRequestValueParser _valueParser;
         private readonly IPagedRequestPropertyMapper _propertyMapper;
 
-        public FilterBuilder(IPagedRequestValueParser valueParser, IPagedRequestPropertyMapper propertyMapper)
+        internal FilterBuilder(IPagedRequestValueParser valueParser, IPagedRequestPropertyMapper propertyMapper)
         {
             _valueParser = valueParser;
             _propertyMapper = propertyMapper;
@@ -66,7 +66,7 @@ namespace EventStuff.Builders
 
     }
 
-    public interface IFilterBuilder<T> where T : class
+    internal interface IFilterBuilder<T> where T : class
     {
         IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase<T>? request);
     }

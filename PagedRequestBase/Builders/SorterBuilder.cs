@@ -6,11 +6,11 @@ using System.Linq.Expressions;
 
 namespace EventStuff.Builders
 {
-    public class SorterBuilder<T> : ISorterBuilder<T> where T : class
+    internal class SorterBuilder<T> : ISorterBuilder<T> where T : class
     {
         private readonly IPagedRequestPropertyMapper _propertyMapper;
 
-        public SorterBuilder(IPagedRequestPropertyMapper propertyMapper)
+        internal SorterBuilder(IPagedRequestPropertyMapper propertyMapper)
         {
             _propertyMapper = propertyMapper;
         }
@@ -48,7 +48,7 @@ namespace EventStuff.Builders
         }
     }
 
-    public interface ISorterBuilder<T> where T : class
+    internal interface ISorterBuilder<T> where T : class
     {
         IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase<T>? request);
     }
