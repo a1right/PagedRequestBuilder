@@ -5,12 +5,12 @@ using System.Linq;
 
 namespace PagedRequestBuilder.Builders
 {
-    public class PagedQueryBuilder<T> : IPagedQueryBuilder<T>
+    internal class PagedQueryBuilder<T> : IPagedQueryBuilder<T>
         where T : class
     {
         private readonly IFilterBuilder<T> _filterBuilder;
         private readonly ISorterBuilder<T> _sorterBuilder;
-        public PagedQueryBuilder(IFilterBuilder<T> filterBuilder, ISorterBuilder<T> sorterBuilder)
+        internal PagedQueryBuilder(IFilterBuilder<T> filterBuilder, ISorterBuilder<T> sorterBuilder)
         {
             _filterBuilder = filterBuilder;
             _sorterBuilder = sorterBuilder;

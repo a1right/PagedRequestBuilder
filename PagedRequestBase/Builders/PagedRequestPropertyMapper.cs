@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-public class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
+internal class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
 {
     private static readonly Dictionary<Type, Dictionary<string, string?>> _typesRequestKeyToPropertyMaps = new();
     public string? MapRequestNameToPropertyName<T>(string? propertyName)
@@ -39,7 +39,7 @@ public class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
     }
 }
 
-public interface IPagedRequestPropertyMapper
+internal interface IPagedRequestPropertyMapper
 {
     string? MapRequestNameToPropertyName<T>(string? propertyName);
 }

@@ -6,7 +6,7 @@ using System.Text.Json.Nodes;
 
 namespace PagedRequestBuilder.Builders
 {
-    public class PagedRequestValueParser : IPagedRequestValueParser
+    internal class PagedRequestValueParser : IPagedRequestValueParser
     {
         public object? GetValue(JsonNode node, Type assignablePropertyType)
         {
@@ -87,7 +87,7 @@ namespace PagedRequestBuilder.Builders
         }
     }
 
-    public interface IPagedRequestValueParser
+    internal interface IPagedRequestValueParser
     {
         object? GetValue(JsonNode node, Type assignablePropertyType);
     }
