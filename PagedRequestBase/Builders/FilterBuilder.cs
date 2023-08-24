@@ -1,6 +1,5 @@
 ﻿using PagedRequestBuilder.Cache;
 using PagedRequestBuilder.Common;
-using PagedRequestBuilder.Common.MethodInfoProvider;
 using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Models.Filter;
 using System;
@@ -14,17 +13,18 @@ namespace PagedRequestBuilder.Builders
         private readonly IPagedRequestValueParser _valueParser;
         private readonly IPagedRequestPropertyMapper _propertyMapper;
         private readonly IQueryFilterCache<T> _queryFilterCache;
-        private readonly IMethodInfoProvider _methodProvider;
+        private readonly IMethodCallExpressionBuilder _methodCallExpressionBuilder;
+
         public FilterBuilder(
             IPagedRequestValueParser valueParser,
             IPagedRequestPropertyMapper propertyMapper,
             IQueryFilterCache<T> queryFilterCache,
-            IMethodInfoProvider methodProvider)
+            IMethodCallExpressionBuilder methodCallExpressionBuilder)
         {
             _valueParser = valueParser;
             _propertyMapper = propertyMapper;
             _queryFilterCache = queryFilterCache;
-            _methodProvider = methodProvider;
+            _methodCallExpressionBuilder = methodCallExpressionBuilder;
         }
         public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase<T>? request)
         {
@@ -80,8 +80,7 @@ namespace PagedRequestBuilder.Builders
                 "<" => Expression.LessThan(left, right),
                 "<=" => Expression.LessThanOrEqual(left, right),
                 "!=" => Expression.NotEqual(left, right),
-                "contains" when _methodProvider.GetMethodInfo("Contains", assignablePropertyType).IsStatic => Expression.Call(_methodProvider.GetMethodInfo("Contains", assignablePropertyType), left, right),
-                "contains" => Expression.Call(left, _methodProvider.GetMethodInfo("Contains", assignablePropertyType), right),
+                "contains" => _methodCallExpressionBuilder.Build("Contains", left, right, assignablePropertyType),
 
                 _ => throw new NotImplementedException()
             };

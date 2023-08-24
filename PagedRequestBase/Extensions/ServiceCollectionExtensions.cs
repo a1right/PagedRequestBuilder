@@ -19,6 +19,7 @@ namespace PagedRequestBuilder.Extensions
             services.AddSingleton(typeof(IQuerySorterCache<>), typeof(QuerySorterCache<>));
             services.AddSingleton<IMethodInfoCache, MethodInfoCache>();
             services.AddSingleton<IMethodInfoProvider, MethodInfoProvider>();
+            services.AddSingleton<IMethodCallExpressionBuilder, MethodCallExpressionBuilder>();
             return services;
         }
     }
