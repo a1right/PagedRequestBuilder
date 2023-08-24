@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "ExpressionFilters": {
+    "TestApp": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": false,

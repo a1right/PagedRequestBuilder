@@ -1,8 +1,8 @@
-﻿using EventStuff.Models.Filter;
-using EventStuff.Models.Sorter;
+﻿using PagedRequestBuilder.Models.Filter;
+using PagedRequestBuilder.Models.Sorter;
 using System.Collections.Generic;
 
-namespace EventStuff.Models
+namespace PagedRequestBuilder.Models
 {
     public abstract class PagedRequestBase<T>
     {
@@ -21,6 +21,5 @@ namespace EventStuff.Models
             get => _size ?? 10;
             set => _size = value;
         }
-
     }
 }

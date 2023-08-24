@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace EventStuff.Models
+namespace PagedRequestBuilder.Models
 {
     public class ExampleContext : DbContext
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace EventStuff.Models.Filter
+namespace PagedRequestBuilder.Models.Filter
 {
     public class QueryFilter<T> : IQueryFilter<T>
     {

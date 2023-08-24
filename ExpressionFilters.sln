@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExpressionFilters", "ExpressionFilters\ExpressionFilters.csproj", "{C36C2ADE-0B75-425D-A24B-55D2F3EBE804}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "ExpressionFilters\TestApp.csproj", "{C36C2ADE-0B75-425D-A24B-55D2F3EBE804}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventStuff", "EventStuff\EventStuff.csproj", "{DED60801-5A6C-4700-90E3-29ABC557B3F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PagedRequestBuilder", "EventStuff\PagedRequestBuilder.csproj", "{DED60801-5A6C-4700-90E3-29ABC557B3F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

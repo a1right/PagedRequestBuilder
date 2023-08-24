@@ -1,9 +1,9 @@
-﻿using EventStuff.Extensions;
-using EventStuff.Models;
+﻿using PagedRequestBuilder.Extensions;
+using PagedRequestBuilder.Models;
 using System;
 using System.Linq;
 
-namespace EventStuff.Builders
+namespace PagedRequestBuilder.Builders
 {
     public class PagedQueryBuilder<T> : IPagedQueryBuilder<T>
         where T : class
@@ -16,39 +16,22 @@ namespace EventStuff.Builders
             _sorterBuilder = sorterBuilder;
         }
 
-        public IQueryable<T> BuildQuery(IQueryable<T> query, PagedRequestBase<T> request)
+        public IQueryable<T> BuildQuery(IQueryable<T> query, PagedRequestBase<T> request) => BuildQueryBase(query, request);
+
+        public IQueryable<T> BuildQuery(IQueryable<T> query, PagedRequestBase<T> request, Func<IQueryable<T>, IQueryable<T>> paginate) =>
+            paginate(BuildQueryBase(query, request));
+
+        public IQueryable<T> BuildQuery(IQueryable<T> query, PagedRequestBase<T> request, bool paginate, int? page, int? size) =>
+            BuildQueryBase(query, request)
+            .Paginate(size, page);
+
+        private IQueryable<T> BuildQueryBase(IQueryable<T> query, PagedRequestBase<T> request)
         {
-            var filters = _filterBuilder.BuildFilters(request);
-            var sorters = _sorterBuilder.BuildSorters(request);
+            query = query
+                .Where(_filterBuilder.BuildFilters(request))
+                .OrderBy(_sorterBuilder.BuildSorters(request));
 
-            return query
-                .Where(filters)
-                .OrderBy(sorters);
-        }
-
-        public IQueryable<T> BuildQuery(IQueryable<T> query, PagedRequestBase<T> request, Func<IQueryable<T>, IQueryable<T>> paginate)
-        {
-            var filters = _filterBuilder.BuildFilters(request);
-            var sorters = _sorterBuilder.BuildSorters(request);
-
-            query = paginate(query);
-
-            return query
-                .Where(filters)
-                .OrderBy(sorters);
-        }
-
-        public IQueryable<T> BuildQuery(IQueryable<T> query, PagedRequestBase<T> request, bool paginate, int? page, int? size)
-        {
-            var filters = _filterBuilder.BuildFilters(request);
-            var sorters = _sorterBuilder.BuildSorters(request);
-
-            if (paginate)
-                query = query.Paginate(size, page);
-
-            return query
-                .Where(filters)
-                .OrderBy(sorters);
+            return query;
         }
     }
 

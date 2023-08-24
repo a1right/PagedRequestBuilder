@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace EventStuff.Models.Sorter
+namespace PagedRequestBuilder.Models.Sorter
 {
     public interface IQuerySorter<T>
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace EventStuff.Attributes
+namespace PagedRequestBuilder.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class PagedRequestKeyAttribute : Attribute

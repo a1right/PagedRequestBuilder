@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EventStuff.Models
+namespace PagedRequestBuilder.Models
 {
     public class PagedResponse<T>
     {

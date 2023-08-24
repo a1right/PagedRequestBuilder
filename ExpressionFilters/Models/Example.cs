@@ -1,7 +1,8 @@
-﻿using EventStuff.Attributes;
+﻿using PagedRequestBuilder.Attributes;
 using System;
+using System.Collections.Generic;
 
-namespace EventStuff.Models
+namespace PagedRequestBuilder.Models
 {
     public class Example
     {
@@ -15,6 +16,10 @@ namespace EventStuff.Models
         public ExampleEnum Enum { get; set; }
         [PagedRequestKeyAttribute("decimal")]
         public decimal Decimal { get; set; }
+        [PagedRequestKey("decimals")]
+        public List<decimal> Decimals { get; set; }
+        [PagedRequestKey("ints")]
+        public int[] Ints { get; set; }
         [PagedRequestKeyAttribute("guid")]
         public Guid Guid { get; set; }
     }
@@ -36,6 +41,8 @@ namespace EventStuff.Models
         public ExampleEnum Enum { get; set; }
         public decimal Decimal { get; set; }
         public Guid Guid { get; set; }
+        public List<decimal> Decimals { get; set; }
+        public int[] Ints { get; set; }
     }
     public class GetPagedExampleRequest : PagedRequestBase<Example>
     {

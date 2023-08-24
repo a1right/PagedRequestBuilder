@@ -1,8 +1,8 @@
-﻿using EventStuff.Models;
-using EventStuff.Services;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using PagedRequestBuilder.Models;
+using PagedRequestBuilder.Services;
 
-namespace ExpressionFilters.Controllers;
+namespace PagedRequestTestApp.Controllers;
 
 [ApiController]
 [Route("[controller]")]

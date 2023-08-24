@@ -1,9 +1,9 @@
-﻿using EventStuff.Models.Filter;
-using EventStuff.Models.Sorter;
+﻿using PagedRequestBuilder.Models.Filter;
+using PagedRequestBuilder.Models.Sorter;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EventStuff.Extensions
+namespace PagedRequestBuilder.Extensions
 {
     public static class QueryableExtensions
     {

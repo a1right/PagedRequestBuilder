@@ -1,18 +1,21 @@
 ﻿using System;
+using System.Collections;
+using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
-namespace EventStuff.Builders
+namespace PagedRequestBuilder.Builders
 {
     public class PagedRequestValueParser : IPagedRequestValueParser
     {
-        public object? GetValue(JsonDocument document, Type assignablePropertyType)
+        public object? GetValue(JsonNode node, Type assignablePropertyType)
         {
-            var value = document.RootElement;
+            var value = node.GetValue<JsonElement>();
             if (value.ValueKind is JsonValueKind.Number)
-                return NumberDeserealizationStrategy(value, assignablePropertyType);
+                return NumberDeserealizationStrategy(node, assignablePropertyType);
 
             if (value.ValueKind is JsonValueKind.String)
-                return StringDeserealizationStrategy(value);
+                return StringDeserealizationStrategy(node);
 
             if (value.ValueKind is JsonValueKind.True)
                 return true;
@@ -28,38 +31,52 @@ namespace EventStuff.Builders
 
             throw new NotImplementedException();
         }
-        private object NumberDeserealizationStrategy(JsonElement document, Type assignablePropertyType)
+        private object NumberDeserealizationStrategy(JsonNode node, Type assignablePropertyType)
         {
-            var value = document.Deserialize<decimal>().ToString();
-
-            if (value is null)
-                throw new NotImplementedException();
-
             if (assignablePropertyType.IsEnum)
-                return Enum.ToObject(assignablePropertyType, byte.Parse(value));
+                return Enum.ToObject(assignablePropertyType, node.GetValue<byte>());
 
             if (assignablePropertyType == typeof(int))
-                return int.Parse(value);
+                return node.GetValue<int>();
 
             if (assignablePropertyType == typeof(double))
-                return double.Parse(value);
+                return node.GetValue<double>();
 
             if (assignablePropertyType == typeof(decimal))
-                return decimal.Parse(value);
+                return node.GetValue<decimal>();
+
+            if (assignablePropertyType.IsArray && assignablePropertyType.GetElementType().IsEnum)
+                return Enum.ToObject(assignablePropertyType.GetElementType(), node.GetValue<byte>());
+            if (assignablePropertyType.IsArray && assignablePropertyType.GetElementType() == typeof(int))
+                return node.GetValue<int>();
+            if (assignablePropertyType.IsArray && assignablePropertyType.GetElementType() == typeof(double))
+                return node.GetValue<double>();
+            if (assignablePropertyType.IsArray && assignablePropertyType.GetElementType() == typeof(decimal))
+                return node.GetValue<decimal>();
+
+            if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType) && assignablePropertyType.GetGenericArguments().First() == typeof(int))
+                return node.GetValue<int>();
+
+            if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType) && assignablePropertyType.GetGenericArguments().First() == typeof(double))
+                return node.GetValue<double>();
+
+            if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType) && assignablePropertyType.GetGenericArguments().First() == typeof(decimal))
+                return node.GetValue<decimal>();
+
+            if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType) && assignablePropertyType.GetGenericArguments().First().IsEnum)
+                return Enum.ToObject(assignablePropertyType.GetGenericArguments().First(), node.GetValue<byte>());
 
             throw new NotImplementedException();
         }
-        private object? StringDeserealizationStrategy(JsonElement element)
+        private object? StringDeserealizationStrategy(JsonNode node)
         {
-            var value = element.Deserialize<string>();
-
-            if (DateTime.TryParse(value, out var dateTime))
+            if (DateTime.TryParse(node.GetValue<string>(), out var dateTime))
                 return dateTime.ToUniversalTime();
 
-            if (Guid.TryParse(value, out var guid))
+            if (Guid.TryParse(node.GetValue<string>(), out var guid))
                 return guid;
 
-            return value;
+            return node.GetValue<string>();
         }
 
         private object[]? ArrayDeserealizationStrategy(JsonElement element)
@@ -72,6 +89,6 @@ namespace EventStuff.Builders
 
     public interface IPagedRequestValueParser
     {
-        object? GetValue(JsonDocument document, Type assignablePropertyType);
+        object? GetValue(JsonNode node, Type assignablePropertyType);
     }
 }

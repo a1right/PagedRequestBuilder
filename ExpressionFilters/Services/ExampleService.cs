@@ -1,11 +1,11 @@
-﻿using EventStuff.Builders;
-using EventStuff.Extensions;
-using EventStuff.Models;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using PagedRequestBuilder.Builders;
+using PagedRequestBuilder.Extensions;
+using PagedRequestBuilder.Models;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace EventStuff.Services
+namespace PagedRequestBuilder.Services
 {
     public class ExampleService : IExampleService
     {
@@ -27,7 +27,7 @@ namespace EventStuff.Services
                 .Select(x => x.Map<Example, ExampleDto>());
 
             var data = await pagedQuery.ToListAsync();
-            var total = await query.CountAsync();
+            var total = await pagedQuery.CountAsync();
 
             return data.ToPagedResponse(request.Page, request.Size, total);
         }

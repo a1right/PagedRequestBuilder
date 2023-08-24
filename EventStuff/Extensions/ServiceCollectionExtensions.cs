@@ -1,7 +1,8 @@
-﻿using EventStuff.Builders;
+﻿using PagedRequestBuilder.Builders;
+using PagedRequestBuilder.Cache;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EventStuff.Extensions
+namespace PagedRequestBuilder.Extensions
 {
     public static class ServiceCollectionExtensions
     {
@@ -12,6 +13,8 @@ namespace EventStuff.Extensions
             services.AddScoped(typeof(ISorterBuilder<>), typeof(SorterBuilder<>));
             services.AddScoped<IPagedRequestValueParser, PagedRequestValueParser>();
             services.AddSingleton<IPagedRequestPropertyMapper, PagedRequestPropertyMapper>();
+            services.AddSingleton(typeof(IQueryFilterCache<>), typeof(QueryFilterCache<>));
+            services.AddSingleton(typeof(IQuerySorterCache<>), typeof(QuerySorterCache<>));
             return services;
         }
     }

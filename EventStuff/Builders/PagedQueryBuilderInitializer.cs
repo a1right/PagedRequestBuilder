@@ -1,4 +1,4 @@
-﻿namespace EventStuff.Builders
+﻿namespace PagedRequestBuilder.Builders
 {
 
     public static class PagedQueryBuilder

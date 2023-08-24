@@ -1,10 +1,10 @@
-using EventStuff.Builders;
-using EventStuff.Extensions;
-using EventStuff.Models;
-using EventStuff.Services;
+using PagedRequestBuilder.Builders;
+using PagedRequestBuilder.Extensions;
+using PagedRequestBuilder.Models;
+using PagedRequestBuilder.Services;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpressionFilters;
+namespace PagedRequestTestApp;
 
 public class Program
 {
@@ -61,6 +61,8 @@ public class Program
                 Enum = (ExampleEnum)x,
                 String = $"String {x}",
                 Guid = Guid.Parse($"CA0EA80A-322C-436D-8E23-C638A30CF8F{x % 10}"),
+                Decimals = new List<decimal> { 0.1m * x },
+                Ints = new[] { x },
             }).ToList());
         }
         context.SaveChanges();

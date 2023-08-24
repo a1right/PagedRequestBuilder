@@ -1,4 +1,4 @@
-﻿using EventStuff.Attributes;
+﻿using PagedRequestBuilder.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,12 +22,10 @@ public class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
 
     public static void ScanPagedRequestKeys()
     {
-        var types = Assembly
-            .GetExecutingAssembly()
-            .GetTypes()
+        var types = AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetTypes()
             .Where(t => t.GetProperties()
                 .Any(p => p
-                    .IsDefined(typeof(PagedRequestKeyAttribute), true)));
+                    .IsDefined(typeof(PagedRequestKeyAttribute), true)))).SelectMany(x => x).ToList();
 
         foreach (var type in types)
         {

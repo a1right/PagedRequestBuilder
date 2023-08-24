@@ -1,18 +1,21 @@
-﻿using EventStuff.Models;
-using EventStuff.Models.Sorter;
+﻿using PagedRequestBuilder.Cache;
+using PagedRequestBuilder.Models;
+using PagedRequestBuilder.Models.Sorter;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace EventStuff.Builders
+namespace PagedRequestBuilder.Builders
 {
     public class SorterBuilder<T> : ISorterBuilder<T> where T : class
     {
         private readonly IPagedRequestPropertyMapper _propertyMapper;
+        private readonly IQuerySorterCache<T> _querySorterCache;
 
-        public SorterBuilder(IPagedRequestPropertyMapper propertyMapper)
+        public SorterBuilder(IPagedRequestPropertyMapper propertyMapper, IQuerySorterCache<T> querySorterCache)
         {
             _propertyMapper = propertyMapper;
+            _querySorterCache = querySorterCache;
         }
 
         public IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase<T>? request)
@@ -22,11 +25,21 @@ namespace EventStuff.Builders
 
             foreach (var sorter in request.Sorters)
             {
+
+                var cached = _querySorterCache.Get(sorter);
+                if (cached is not null)
+                {
+                    yield return cached;
+                    continue;
+                }
+
                 var keySelector = GetKeySelector(sorter);
-
                 if (keySelector != null)
-                    yield return new QuerySorter<T>(keySelector, sorter.Descending ?? false);
-
+                {
+                    var querySorter = new QuerySorter<T>(keySelector, sorter.Descending ?? false);
+                    yield return querySorter;
+                    _querySorterCache.Set(sorter, querySorter);
+                }
             }
         }
 
