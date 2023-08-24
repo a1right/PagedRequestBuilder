@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "ExpressionFilters\TestApp.csproj", "{C36C2ADE-0B75-425D-A24B-55D2F3EBE804}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PagedRequestBuilder", "PagedRequestBase\PagedRequestBuilder.csproj", "{E8645AAC-BFD8-41AC-8D83-7768BBF447F6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{55FA3DBD-665E-44BF-B725-86F7C6F1691E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C36C2ADE-0B75-425D-A24B-55D2F3EBE804}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C36C2ADE-0B75-425D-A24B-55D2F3EBE804}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C36C2ADE-0B75-425D-A24B-55D2F3EBE804}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C36C2ADE-0B75-425D-A24B-55D2F3EBE804}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E8645AAC-BFD8-41AC-8D83-7768BBF447F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E8645AAC-BFD8-41AC-8D83-7768BBF447F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E8645AAC-BFD8-41AC-8D83-7768BBF447F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E8645AAC-BFD8-41AC-8D83-7768BBF447F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55FA3DBD-665E-44BF-B725-86F7C6F1691E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55FA3DBD-665E-44BF-B725-86F7C6F1691E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55FA3DBD-665E-44BF-B725-86F7C6F1691E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55FA3DBD-665E-44BF-B725-86F7C6F1691E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
