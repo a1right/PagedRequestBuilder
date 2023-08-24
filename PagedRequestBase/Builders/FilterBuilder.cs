@@ -1,12 +1,11 @@
 ﻿using PagedRequestBuilder.Cache;
+using PagedRequestBuilder.Common;
+using PagedRequestBuilder.Common.MethodInfoProvider;
 using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Models.Filter;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 
 namespace PagedRequestBuilder.Builders
 {
@@ -15,11 +14,17 @@ namespace PagedRequestBuilder.Builders
         private readonly IPagedRequestValueParser _valueParser;
         private readonly IPagedRequestPropertyMapper _propertyMapper;
         private readonly IQueryFilterCache<T> _queryFilterCache;
-        public FilterBuilder(IPagedRequestValueParser valueParser, IPagedRequestPropertyMapper propertyMapper, IQueryFilterCache<T> queryFilterCache)
+        private readonly IMethodInfoProvider _methodProvider;
+        public FilterBuilder(
+            IPagedRequestValueParser valueParser,
+            IPagedRequestPropertyMapper propertyMapper,
+            IQueryFilterCache<T> queryFilterCache,
+            IMethodInfoProvider methodProvider)
         {
             _valueParser = valueParser;
             _propertyMapper = propertyMapper;
             _queryFilterCache = queryFilterCache;
+            _methodProvider = methodProvider;
         }
         public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase<T>? request)
         {
@@ -75,29 +80,13 @@ namespace PagedRequestBuilder.Builders
                 "<" => Expression.LessThan(left, right),
                 "<=" => Expression.LessThanOrEqual(left, right),
                 "!=" => Expression.NotEqual(left, right),
-                "contains" when assignablePropertyType == typeof(string) => Expression.Call(left, typeof(string).GetMethod("Contains", new[] { typeof(string) }), right),
-                "contains" when assignablePropertyType.IsArray => Expression.Call(GetArrayLinqMethodInfo("Contains", assignablePropertyType), left, right),
-                "contains" when typeof(IEnumerable).IsAssignableFrom(assignablePropertyType) => Expression.Call(GetLinqMethodInfo("Contains", assignablePropertyType), left, right),
+                "contains" when _methodProvider.GetMethodInfo("Contains", assignablePropertyType).IsStatic => Expression.Call(_methodProvider.GetMethodInfo("Contains", assignablePropertyType), left, right),
+                "contains" => Expression.Call(left, _methodProvider.GetMethodInfo("Contains", assignablePropertyType), right),
 
                 _ => throw new NotImplementedException()
             };
         }
 
-        private MethodInfo GetLinqMethodInfo(string name, Type assignablePropertyType)
-        {
-            return typeof(Enumerable)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Single(x => x.Name == name && x.GetParameters().Length == 2)
-            .MakeGenericMethod(assignablePropertyType.GetGenericArguments().First());
-        }
-
-        private MethodInfo GetArrayLinqMethodInfo(string name, Type assignablePropertyType)
-        {
-            return typeof(Enumerable)
-            .GetMethods(BindingFlags.Public | BindingFlags.Static)
-            .Single(x => x.Name == name && x.GetParameters().Length == 2)
-            .MakeGenericMethod(assignablePropertyType.GetElementType());
-        }
     }
 
     public interface IFilterBuilder<T> where T : class

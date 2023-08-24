@@ -1,6 +1,8 @@
-﻿using PagedRequestBuilder.Builders;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PagedRequestBuilder.Builders;
 using PagedRequestBuilder.Cache;
-using Microsoft.Extensions.DependencyInjection;
+using PagedRequestBuilder.Common;
+using PagedRequestBuilder.Common.MethodInfoProvider;
 
 namespace PagedRequestBuilder.Extensions
 {
@@ -15,6 +17,8 @@ namespace PagedRequestBuilder.Extensions
             services.AddSingleton<IPagedRequestPropertyMapper, PagedRequestPropertyMapper>();
             services.AddSingleton(typeof(IQueryFilterCache<>), typeof(QueryFilterCache<>));
             services.AddSingleton(typeof(IQuerySorterCache<>), typeof(QuerySorterCache<>));
+            services.AddSingleton<IMethodInfoCache, MethodInfoCache>();
+            services.AddSingleton<IMethodInfoProvider, MethodInfoProvider>();
             return services;
         }
     }

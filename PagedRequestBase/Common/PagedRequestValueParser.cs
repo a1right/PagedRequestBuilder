@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace PagedRequestBuilder.Builders
+namespace PagedRequestBuilder.Common
 {
     internal class PagedRequestValueParser : IPagedRequestValueParser
     {
