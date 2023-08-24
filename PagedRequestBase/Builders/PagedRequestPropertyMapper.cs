@@ -39,7 +39,7 @@ internal class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
     }
 }
 
-internal interface IPagedRequestPropertyMapper
+public interface IPagedRequestPropertyMapper
 {
     string? MapRequestNameToPropertyName<T>(string? propertyName);
 }

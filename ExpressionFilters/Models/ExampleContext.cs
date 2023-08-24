@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace PagedRequestBuilder.Models
+namespace PagedRequestBuilder.Models;
+
+public class ExampleContext : DbContext
 {
-    public class ExampleContext : DbContext
-    {
-        public DbSet<Example> Examples { get; set; }
-        public ExampleContext(DbContextOptions options) : base(options) { }
-    }
+    public DbSet<Example> Examples { get; set; }
+    public ExampleContext(DbContextOptions options) : base(options) { }
 }

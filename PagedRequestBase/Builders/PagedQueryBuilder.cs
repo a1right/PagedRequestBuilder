@@ -10,7 +10,7 @@ namespace PagedRequestBuilder.Builders
     {
         private readonly IFilterBuilder<T> _filterBuilder;
         private readonly ISorterBuilder<T> _sorterBuilder;
-        internal PagedQueryBuilder(IFilterBuilder<T> filterBuilder, ISorterBuilder<T> sorterBuilder)
+        public PagedQueryBuilder(IFilterBuilder<T> filterBuilder, ISorterBuilder<T> sorterBuilder)
         {
             _filterBuilder = filterBuilder;
             _sorterBuilder = sorterBuilder;

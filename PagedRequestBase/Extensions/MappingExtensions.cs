@@ -1,10 +1,7 @@
-﻿using EventStuff.Models;
-using System;
+﻿using PagedRequestBuilder.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 
-namespace EventStuff.Extensions
+namespace PagedRequestBuilder.Extensions
 {
     public static class MappingExtensions
     {

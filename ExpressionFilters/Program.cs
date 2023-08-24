@@ -1,8 +1,8 @@
+using Microsoft.EntityFrameworkCore;
 using PagedRequestBuilder.Builders;
 using PagedRequestBuilder.Extensions;
 using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Services;
-using Microsoft.EntityFrameworkCore;
 
 namespace PagedRequestTestApp;
 

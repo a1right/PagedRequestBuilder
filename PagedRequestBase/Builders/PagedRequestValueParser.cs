@@ -87,7 +87,7 @@ namespace PagedRequestBuilder.Builders
         }
     }
 
-    internal interface IPagedRequestValueParser
+    public interface IPagedRequestValueParser
     {
         object? GetValue(JsonNode node, Type assignablePropertyType);
     }
