@@ -7,6 +7,7 @@ namespace PagedRequestBuilder.Models.Filter
         public string? Property { get; set; }
         public JsonNode? Value { get; set; }
         public string? Operation { get; set; }
+        public string[]? Nested { get; set; }
 
         public override bool Equals(object? obj)
         {

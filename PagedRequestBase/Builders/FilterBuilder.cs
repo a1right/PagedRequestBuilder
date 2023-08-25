@@ -59,6 +59,16 @@ namespace PagedRequestBuilder.Builders
                 var typePropertyName = _propertyMapper.MapRequestNameToPropertyName<T>(entry.Property);
                 var propertySelector = Expression.PropertyOrField(parameter, typePropertyName);
                 var assignablePropertyType = typeof(T).GetProperty(typePropertyName).PropertyType;
+
+                if (entry.Nested is not null)
+                {
+                    foreach (var nested in entry.Nested)
+                    {
+                        typePropertyName = _propertyMapper.MapNestedRequestNameToPropertyName<T>(nested, assignablePropertyType);
+                        propertySelector = Expression.PropertyOrField(propertySelector, typePropertyName);
+                        assignablePropertyType = assignablePropertyType.GetProperty(typePropertyName).PropertyType;
+                    }
+                }
                 var constant = Expression.Constant(_valueParser.GetValue(entry.Value, assignablePropertyType));
                 var newExpression = GetOperationExpression(propertySelector, constant, entry.Operation, assignablePropertyType);
                 return Expression.Lambda<Func<T, bool>>(newExpression, parameter);

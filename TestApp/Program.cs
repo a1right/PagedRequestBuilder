@@ -59,10 +59,11 @@ public class Program
                 Date = DateTime.UtcNow.AddDays(-daysShift++),
                 Decimal = (decimal)(0.1 * x),
                 Enum = (ExampleEnum)x,
-                String = $"String {x}",
+                String = $"string {x}",
                 Guid = Guid.Parse($"CA0EA80A-322C-436D-8E23-C638A30CF8F{x % 10}"),
                 Decimals = new List<decimal> { 0.1m * x },
                 Ints = new[] { x },
+                Inner = new() { String = $"inner string {x}", Nested = new() { String = $" double inner string {x}" } },
             }).ToList());
         }
         context.SaveChanges();
