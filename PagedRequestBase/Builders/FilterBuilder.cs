@@ -69,8 +69,12 @@ namespace PagedRequestBuilder.Builders
                         assignablePropertyType = assignablePropertyType.GetProperty(typePropertyName).PropertyType;
                     }
                 }
-                var constant = Expression.Constant(_valueParser.GetValue(entry.Value, assignablePropertyType));
-                var newExpression = GetOperationExpression(propertySelector, constant, entry.Operation, assignablePropertyType);
+
+                var providedValue = _valueParser.GetValue(entry.Value, assignablePropertyType);
+                var constant = Expression.Constant(providedValue, typeof(ValueParseResult));
+                var constantClojure = Expression.Property(constant, nameof(ValueParseResult.Value));
+                var converted = Expression.Convert(constantClojure, providedValue.ValueType);
+                var newExpression = GetOperationExpression(propertySelector, converted, entry.Operation, assignablePropertyType);
                 return Expression.Lambda<Func<T, bool>>(newExpression, parameter);
             }
 
@@ -80,7 +84,7 @@ namespace PagedRequestBuilder.Builders
             }
         }
 
-        private Expression GetOperationExpression(MemberExpression left, ConstantExpression right, string operation, Type assignablePropertyType)
+        private Expression GetOperationExpression(Expression left, Expression right, string operation, Type assignablePropertyType)
         {
             return operation switch
             {
@@ -91,6 +95,7 @@ namespace PagedRequestBuilder.Builders
                 "<=" => Expression.LessThanOrEqual(left, right),
                 "!=" => Expression.NotEqual(left, right),
                 "contains" => _methodCallExpressionBuilder.Build("Contains", left, right, assignablePropertyType),
+                "in" => _methodCallExpressionBuilder.Build("Contains", right, left, right.Type),
 
                 _ => throw new NotImplementedException()
             };

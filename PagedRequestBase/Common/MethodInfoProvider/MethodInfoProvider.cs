@@ -30,11 +30,11 @@ namespace PagedRequestBuilder.Common.MethodInfoProvider
             if (assignablePropertyType == typeof(string))
                 return new StringMethodInfoStrategy();
 
-            if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType))
-                return new EnumerableMethodInfoStrategy();
-
             if (assignablePropertyType.IsArray)
                 return new ArrayMethodInfoStrategy();
+
+            if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType))
+                return new EnumerableMethodInfoStrategy();
 
             throw new NotImplementedException(assignablePropertyType.FullName);
         }

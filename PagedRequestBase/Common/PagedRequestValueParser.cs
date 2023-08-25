@@ -8,8 +8,12 @@ namespace PagedRequestBuilder.Common
 {
     internal class PagedRequestValueParser : IPagedRequestValueParser
     {
-        public object? GetValue(JsonNode node, Type assignablePropertyType)
+        public ValueParseResult GetValue(JsonNode node, Type assignablePropertyType)
         {
+            if (node is JsonArray array)
+            {
+                return ArrayDeserealizationStrategy(node, assignablePropertyType);
+            }
             var value = node.GetValue<JsonElement>();
             if (value.ValueKind is JsonValueKind.Number)
                 return NumberDeserealizationStrategy(node, assignablePropertyType);
@@ -18,77 +22,103 @@ namespace PagedRequestBuilder.Common
                 return StringDeserealizationStrategy(node);
 
             if (value.ValueKind is JsonValueKind.True)
-                return true;
+                return new ValueParseResult(true, typeof(bool));
 
             if (value.ValueKind is JsonValueKind.False)
-                return false;
-
-            if (value.ValueKind is JsonValueKind.Object)
-                return value.Deserialize<object>();
+                return new ValueParseResult(false, typeof(bool));
 
             if (value.ValueKind is JsonValueKind.Array)
-                return ArrayDeserealizationStrategy(value);
+                return ArrayDeserealizationStrategy(node, assignablePropertyType);
 
             throw new NotImplementedException();
         }
-        private object NumberDeserealizationStrategy(JsonNode node, Type assignablePropertyType)
+        private ValueParseResult NumberDeserealizationStrategy(JsonNode node, Type assignablePropertyType)
         {
             if (assignablePropertyType.IsEnum)
-                return Enum.ToObject(assignablePropertyType, node.GetValue<byte>());
+            {
+                var result = Enum.ToObject(assignablePropertyType, node.GetValue<byte>());
+                return new ValueParseResult(result, result.GetType());
+            }
 
             if (assignablePropertyType == typeof(int))
-                return node.GetValue<int>();
+                return new ValueParseResult(node.GetValue<int>(), typeof(int));
 
             if (assignablePropertyType == typeof(double))
-                return node.GetValue<double>();
+                return new ValueParseResult(node.GetValue<double>(), typeof(double));
 
             if (assignablePropertyType == typeof(decimal))
-                return node.GetValue<decimal>();
+                return new ValueParseResult(node.GetValue<decimal>(), typeof(decimal));
 
             if (assignablePropertyType.IsArray && assignablePropertyType.GetElementType().IsEnum)
-                return Enum.ToObject(assignablePropertyType.GetElementType(), node.GetValue<byte>());
+            {
+                var result = Enum.ToObject(assignablePropertyType.GetElementType(), node.GetValue<byte>());
+                return new ValueParseResult(result, result.GetType());
+            }
+
             if (assignablePropertyType.IsArray && assignablePropertyType.GetElementType() == typeof(int))
-                return node.GetValue<int>();
+                return new ValueParseResult(node.GetValue<int>(), typeof(int));
             if (assignablePropertyType.IsArray && assignablePropertyType.GetElementType() == typeof(double))
-                return node.GetValue<double>();
+                return new ValueParseResult(node.GetValue<double>(), typeof(double));
             if (assignablePropertyType.IsArray && assignablePropertyType.GetElementType() == typeof(decimal))
-                return node.GetValue<decimal>();
+                return new ValueParseResult(node.GetValue<decimal>(), typeof(decimal));
 
             if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType) && assignablePropertyType.GetGenericArguments().First() == typeof(int))
-                return node.GetValue<int>();
+                return new ValueParseResult(node.GetValue<int>(), typeof(int));
 
             if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType) && assignablePropertyType.GetGenericArguments().First() == typeof(double))
-                return node.GetValue<double>();
+                return new ValueParseResult(node.GetValue<double>(), typeof(double));
 
             if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType) && assignablePropertyType.GetGenericArguments().First() == typeof(decimal))
-                return node.GetValue<decimal>();
+                return new ValueParseResult(node.GetValue<decimal>(), typeof(decimal));
 
             if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType) && assignablePropertyType.GetGenericArguments().First().IsEnum)
-                return Enum.ToObject(assignablePropertyType.GetGenericArguments().First(), node.GetValue<byte>());
+            {
+                var result = Enum.ToObject(assignablePropertyType.GetGenericArguments().First(), node.GetValue<byte>());
+                return new ValueParseResult(result, result.GetType());
+            }
 
             throw new NotImplementedException();
         }
-        private object? StringDeserealizationStrategy(JsonNode node)
+        private ValueParseResult StringDeserealizationStrategy(JsonNode node)
         {
             if (DateTime.TryParse(node.GetValue<string>(), out var dateTime))
-                return dateTime.ToUniversalTime();
+                return new ValueParseResult(dateTime.ToUniversalTime(), typeof(DateTime));
 
             if (Guid.TryParse(node.GetValue<string>(), out var guid))
-                return guid;
+                return new ValueParseResult(guid, typeof(Guid));
 
-            return node.GetValue<string>();
+            return new ValueParseResult(node.GetValue<string>(), typeof(string));
         }
 
-        private object[]? ArrayDeserealizationStrategy(JsonElement element)
+        private ValueParseResult ArrayDeserealizationStrategy(JsonNode node, Type assignablePropertyType)
         {
-            var value = element.Deserialize<object[]>();
+            var value = node.AsArray().ToArray();
+            var parseResult = value.Select(x => GetValue(x, assignablePropertyType)).ToArray();
+            var result = Array.CreateInstance(parseResult.First().ValueType, parseResult.Length);
 
-            return value;
+            for (var index = 0; index < parseResult.Length; index++)
+            {
+                result.SetValue(parseResult[index].Value, index);
+            }
+            return new ValueParseResult(result, result.GetType());
         }
     }
 
     public interface IPagedRequestValueParser
     {
-        object? GetValue(JsonNode node, Type assignablePropertyType);
+        ValueParseResult GetValue(JsonNode node, Type assignablePropertyType);
+    }
+
+    public class ValueParseResult
+    {
+        public object Value { get; set; }
+        public Type ValueType { get; set; }
+
+        public ValueParseResult(object value, Type valueType)
+        {
+            Value = value;
+            ValueType = valueType;
+        }
+
     }
 }

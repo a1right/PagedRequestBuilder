@@ -13,7 +13,7 @@ namespace PagedRequestBuilder.Builders
             _methodInfoProvider = methodInfoProvider;
         }
 
-        public Expression Build(string name, MemberExpression left, ConstantExpression right, Type assignablePropertyType)
+        public Expression Build(string name, Expression left, Expression right, Type assignablePropertyType)
         {
             var method = _methodInfoProvider.GetMethodInfo(name, assignablePropertyType);
 
@@ -26,6 +26,6 @@ namespace PagedRequestBuilder.Builders
 
     public interface IMethodCallExpressionBuilder
     {
-        Expression Build(string name, MemberExpression left, ConstantExpression right, Type assignablePropertyType);
+        Expression Build(string name, Expression left, Expression right, Type assignablePropertyType);
     }
 }

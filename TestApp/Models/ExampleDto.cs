@@ -5,6 +5,7 @@ namespace PagedRequestBuilder.Models;
 public class ExampleDto
 {
     public string String { get; set; }
+    public string[] Strings { get; set; }
     public DateTime Date { get; set; }
     public ExampleEnum Enum { get; set; }
     public decimal Decimal { get; set; }

@@ -23,9 +23,11 @@ namespace PagedRequestBuilder.Models.Filter
 
             var equals =
                 Property == other.Property &&
-                Value?.AsValue().ToJsonString() == other.Value?.AsValue().ToJsonString() &&
-                Nested.OrderBy(x => x).SequenceEqual(other.Nested.OrderBy(x => x)) &&
+                Value?.ToJsonString() == other.Value?.ToJsonString() &&
                 Operation == other?.Operation;
+
+            if (Nested is not null)
+                equals = equals && Nested.OrderBy(x => x).SequenceEqual(other.Nested.OrderBy(x => x));
 
             return equals;
         }
