@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Linq;
+using System.Text.Json.Nodes;
 
 namespace PagedRequestBuilder.Models.Filter
 {
@@ -23,6 +24,7 @@ namespace PagedRequestBuilder.Models.Filter
             var equals =
                 Property == other.Property &&
                 Value?.AsValue().ToJsonString() == other.Value?.AsValue().ToJsonString() &&
+                Nested.OrderBy(x => x).SequenceEqual(other.Nested.OrderBy(x => x)) &&
                 Operation == other?.Operation;
 
             return equals;
@@ -52,10 +54,19 @@ namespace PagedRequestBuilder.Models.Filter
 
         public override int GetHashCode()
         {
-            if (Property is not null)
-                return Property.GetHashCode();
+            var hashCode = 0;
+            unchecked
+            {
 
-            return base.GetHashCode();
+                if (Property is not null)
+                    hashCode += Property.GetHashCode();
+
+                if (Nested is not null)
+                    foreach (var nested in Nested)
+                        hashCode += nested.GetHashCode();
+            }
+
+            return hashCode == 0 ? base.GetHashCode() : hashCode;
         }
     }
 }

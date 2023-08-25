@@ -38,4 +38,9 @@ public class DoubleInnerExample
     public int Id { get; set; }
     [PagedRequestKey("string")]
     public string String { get; set; }
+    [PagedRequestKey("enumlist")]
+    public List<ExampleEnum> EnumList { get; set; }
+
+    [PagedRequestKey("enumarray")]
+    public ExampleEnum[] EnumArray { get; set; }
 }

@@ -63,7 +63,16 @@ public class Program
                 Guid = Guid.Parse($"CA0EA80A-322C-436D-8E23-C638A30CF8F{x % 10}"),
                 Decimals = new List<decimal> { 0.1m * x },
                 Ints = new[] { x },
-                Inner = new() { String = $"inner string {x}", Nested = new() { String = $" double inner string {x}" } },
+                Inner = new()
+                {
+                    String = $"inner string {x}",
+                    Nested = new()
+                    {
+                        String = $" double inner string {x}",
+                        EnumArray = new[] { Enum.Parse<ExampleEnum>((x % 3).ToString()) },
+                        EnumList = new List<ExampleEnum> { Enum.Parse<ExampleEnum>((x % 3).ToString()) }
+                    }
+                },
             }).ToList());
         }
         context.SaveChanges();

@@ -23,6 +23,7 @@ public class ExampleService : IExampleService
         var pagedQuery = _queryBuilder
             .BuildQuery(query, request, true, 1, 100)
             .Include(x => x.Inner)
+            .ThenInclude(x => x.Nested)
             .Select(x => x.Map<Example, ExampleDto>());
 
         var data = await pagedQuery.ToListAsync();
