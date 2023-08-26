@@ -10,11 +10,8 @@ public class MethodInfoCache : IMethodInfoCache
     public MethodInfo? Get(string name, Type assignablePropertyType)
     {
         if (_methods.TryGetValue(assignablePropertyType, out var cachedMethods))
-            if (cachedMethods is not null)
-            {
-                if (cachedMethods.ContainsKey(name))
-                    return cachedMethods[name];
-            }
+            if (cachedMethods.TryGetValue(name, out var method))
+                return method;
 
         return null;
     }

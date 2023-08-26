@@ -7,18 +7,21 @@ namespace PagedRequestBuilder.Common.MethodInfoProvider.Strategies;
 
 internal class EnumerableMethodInfoStrategy : IMethodInfoStrategy
 {
-    public MethodInfo GetMethodInfo(string name, Type assignablePropertyType) => name switch
+    public MethodInfo GetMethodInfo(string name, Type assignablePropertyType)
     {
-        Constants.MethodInfoNames.Contains => GetLinqMethodInfo(name, assignablePropertyType),
+        var enumerableOfType = assignablePropertyType.GetGenericArguments().First();
+        return Get(name, enumerableOfType);
+    }
+
+    public MethodInfo Get(string name, Type enumerableOfType) => name switch
+    {
+        Constants.MethodInfoNames.Contains => GetStaticGenericMethod(name, enumerableOfType),
 
         _ => throw new NotImplementedException(name),
     };
 
-    private MethodInfo GetLinqMethodInfo(string name, Type assignablePropertyType)
-    {
-        return typeof(Enumerable)
+    private MethodInfo GetStaticGenericMethod(string name, Type enumerableOfType) => typeof(Enumerable)
         .GetMethods(BindingFlags.Public | BindingFlags.Static)
         .Single(x => x.Name == name && x.GetParameters().Length == 2)
-        .MakeGenericMethod(assignablePropertyType.GetGenericArguments().First());
-    }
+        .MakeGenericMethod(enumerableOfType);
 }

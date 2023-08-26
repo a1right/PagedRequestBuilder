@@ -7,17 +7,21 @@ namespace PagedRequestBuilder.Common.MethodInfoProvider.Strategies;
 
 internal class ArrayMethodInfoStrategy : IMethodInfoStrategy
 {
-    public MethodInfo GetMethodInfo(string name, Type assignablePropertyType) => name switch
+    public MethodInfo GetMethodInfo(string name, Type assignablePropertyType)
     {
-        Constants.MethodInfoNames.Contains => GetArrayMethod(name, assignablePropertyType),
+        var arrayOfType = assignablePropertyType.GetElementType();
+        return Get(name, arrayOfType);
+    }
+
+    public MethodInfo Get(string name, Type arrayOfType) => name switch
+    {
+        Constants.MethodInfoNames.Contains => GetStaticGenericMethod(name, arrayOfType),
 
         _ => throw new NotImplementedException(name),
     };
-    private MethodInfo GetArrayMethod(string name, Type assignablePropertyType)
-    {
-        return typeof(Enumerable)
+
+    private MethodInfo GetStaticGenericMethod(string name, Type arrayOfType) => typeof(Enumerable)
         .GetMethods(BindingFlags.Public | BindingFlags.Static)
         .Single(x => x.Name == name && x.GetParameters().Length == 2)
-        .MakeGenericMethod(assignablePropertyType.GetElementType());
-    }
+        .MakeGenericMethod(arrayOfType);
 }
