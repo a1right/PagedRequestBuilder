@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace PagedRequestBuilder.Common.MethodInfoProvider
 {
-    public class StringMethodInfoStrategy : IMethodInfoProviderStrategy
+    public class StringMethodInfoStrategy : IMethodInfoStrategy
     {
         public MethodInfo GetMethodInfo(string name, Type assignablePropertyType) => name switch
         {

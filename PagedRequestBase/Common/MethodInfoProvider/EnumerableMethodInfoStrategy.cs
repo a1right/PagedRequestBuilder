@@ -4,7 +4,7 @@ using System.Reflection;
 
 namespace PagedRequestBuilder.Common.MethodInfoProvider
 {
-    public class EnumerableMethodInfoStrategy : IMethodInfoProviderStrategy
+    public class EnumerableMethodInfoStrategy : IMethodInfoStrategy
     {
         public MethodInfo GetMethodInfo(string name, Type assignablePropertyType) => name switch
         {

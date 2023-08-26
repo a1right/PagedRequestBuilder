@@ -76,6 +76,7 @@ public class Program
                 },
             }).ToList());
         }
+
         context.SaveChanges();
     }
 }
