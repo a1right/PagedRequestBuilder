@@ -6,5 +6,5 @@ namespace PagedRequestBuilder.Common.ValueParser.Strategies;
 
 internal class BoolParseStrategy : IValueParseStrategy
 {
-    public ValueParseResult GetValue(JsonValue value, Type assignablePropertyType) => new(value.GetValue<bool>(), typeof(bool));
+    public ValueParseResult GetValue(JsonValue value, Type assignablePropertyType) => ValueParseResult.New<bool>(value);
 }

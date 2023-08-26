@@ -8,12 +8,16 @@ internal class StringParseStrategy : IValueParseStrategy
 {
     public ValueParseResult GetValue(JsonValue value, Type assignablePropertyType)
     {
-        if (DateTime.TryParse(value.GetValue<string>(), out var dateTime))
-            return new ValueParseResult(dateTime.ToUniversalTime(), typeof(DateTime));
+        var typedValue = value.GetValue<string>();
+        if (assignablePropertyType == typeof(DateTime))
+            return ValueParseResult.New(DateTime.Parse(typedValue).ToUniversalTime());
 
-        if (Guid.TryParse(value.GetValue<string>(), out var guid))
-            return new ValueParseResult(guid, typeof(Guid));
+        if (assignablePropertyType == typeof(Guid))
+            return ValueParseResult.New(Guid.Parse(typedValue));
 
-        return new ValueParseResult(value.GetValue<string>(), typeof(string));
+        if (assignablePropertyType == typeof(string))
+            return ValueParseResult.New(typedValue);
+
+        throw new NotImplementedException();
     }
 }

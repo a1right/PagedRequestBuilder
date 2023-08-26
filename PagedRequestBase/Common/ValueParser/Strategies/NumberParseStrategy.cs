@@ -22,19 +22,16 @@ internal class NumberParseStrategy : IValueParseStrategy
     public ValueParseResult ForPrimitiveAssignType(JsonValue value, Type assignablePropertyType)
     {
         if (assignablePropertyType.IsEnum)
-        {
-            var result = Enum.ToObject(assignablePropertyType, value.GetValue<byte>());
-            return new ValueParseResult(result, result.GetType());
-        }
+            return ValueParseResult.New(Enum.ToObject(assignablePropertyType, value.GetValue<byte>()), assignablePropertyType);
 
         if (assignablePropertyType == typeof(int))
-            return new ValueParseResult(value.GetValue<int>(), typeof(int));
+            return ValueParseResult.New<int>(value);
 
         if (assignablePropertyType == typeof(double))
-            return new ValueParseResult(value.GetValue<double>(), typeof(double));
+            return ValueParseResult.New<double>(value);
 
         if (assignablePropertyType == typeof(decimal))
-            return new ValueParseResult(value.GetValue<decimal>(), typeof(decimal));
+            return ValueParseResult.New<decimal>(value);
 
         throw new NotImplementedException();
     }
@@ -44,19 +41,16 @@ internal class NumberParseStrategy : IValueParseStrategy
         var arrayOfType = assignablePropertyType.GetElementType();
 
         if (arrayOfType.IsEnum)
-        {
-            var result = Enum.ToObject(assignablePropertyType.GetElementType(), value.GetValue<byte>());
-            return new ValueParseResult(result, result.GetType());
-        }
+            return ValueParseResult.New(Enum.ToObject(arrayOfType, value.GetValue<byte>()), arrayOfType);
 
         if (arrayOfType == typeof(int))
-            return new ValueParseResult(value.GetValue<int>(), typeof(int));
+            return ValueParseResult.New<int>(value);
 
         if (arrayOfType == typeof(double))
-            return new ValueParseResult(value.GetValue<double>(), typeof(double));
+            return ValueParseResult.New<double>(value);
 
         if (arrayOfType == typeof(decimal))
-            return new ValueParseResult(value.GetValue<decimal>(), typeof(decimal));
+            return ValueParseResult.New<decimal>(value);
 
         throw new NotImplementedException();
     }
@@ -66,19 +60,16 @@ internal class NumberParseStrategy : IValueParseStrategy
         var enumerableOfType = assignablePropertyType.GetGenericArguments().First();
 
         if (enumerableOfType.IsEnum)
-        {
-            var result = Enum.ToObject(assignablePropertyType.GetGenericArguments().First(), value.GetValue<byte>());
-            return new ValueParseResult(result, result.GetType());
-        }
+            return ValueParseResult.New(Enum.ToObject(enumerableOfType, value.GetValue<byte>()), enumerableOfType);
 
         if (enumerableOfType == typeof(int))
-            return new ValueParseResult(value.GetValue<int>(), typeof(int));
+            return ValueParseResult.New<int>(value);
 
         if (enumerableOfType == typeof(double))
-            return new ValueParseResult(value.GetValue<double>(), typeof(double));
+            return ValueParseResult.New<double>(value);
 
         if (enumerableOfType == typeof(decimal))
-            return new ValueParseResult(value.GetValue<decimal>(), typeof(decimal));
+            return ValueParseResult.New<decimal>(value);
 
         throw new NotImplementedException();
     }
