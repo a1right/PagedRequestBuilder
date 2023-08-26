@@ -14,13 +14,13 @@ namespace PagedRequestBuilder.Builders;
 public class FilterBuilder<T> : IFilterBuilder<T> where T : class
 {
     private readonly IPagedRequestValueParser _valueParser;
-    private readonly IPagedRequestPropertyMapper _propertyMapper;
+    private readonly IRequestPropertyMapper _propertyMapper;
     private readonly IQueryFilterCache<T> _queryFilterCache;
     private readonly IMethodCallExpressionBuilder _methodCallExpressionBuilder;
 
     public FilterBuilder(
         IPagedRequestValueParser valueParser,
-        IPagedRequestPropertyMapper propertyMapper,
+        IRequestPropertyMapper propertyMapper,
         IQueryFilterCache<T> queryFilterCache,
         IMethodCallExpressionBuilder methodCallExpressionBuilder)
     {

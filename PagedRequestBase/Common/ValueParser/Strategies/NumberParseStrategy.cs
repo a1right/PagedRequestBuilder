@@ -40,37 +40,13 @@ internal class NumberParseStrategy : IValueParseStrategy
     {
         var arrayOfType = assignablePropertyType.GetElementType();
 
-        if (arrayOfType.IsEnum)
-            return ValueParseResult.New(Enum.ToObject(arrayOfType, value.GetValue<byte>()), arrayOfType);
-
-        if (arrayOfType == typeof(int))
-            return ValueParseResult.New<int>(value);
-
-        if (arrayOfType == typeof(double))
-            return ValueParseResult.New<double>(value);
-
-        if (arrayOfType == typeof(decimal))
-            return ValueParseResult.New<decimal>(value);
-
-        throw new NotImplementedException();
+        return ForPrimitiveAssignType(value, arrayOfType);
     }
 
     public ValueParseResult ForEnumerableAssignType(JsonValue value, Type assignablePropertyType)
     {
         var enumerableOfType = assignablePropertyType.GetGenericArguments().First();
 
-        if (enumerableOfType.IsEnum)
-            return ValueParseResult.New(Enum.ToObject(enumerableOfType, value.GetValue<byte>()), enumerableOfType);
-
-        if (enumerableOfType == typeof(int))
-            return ValueParseResult.New<int>(value);
-
-        if (enumerableOfType == typeof(double))
-            return ValueParseResult.New<double>(value);
-
-        if (enumerableOfType == typeof(decimal))
-            return ValueParseResult.New<decimal>(value);
-
-        throw new NotImplementedException();
+        return ForPrimitiveAssignType(value, enumerableOfType);
     }
 }

@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace PagedRequestBuilder.Common;
 
-internal class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
+internal class RequestPropertyMapper : IRequestPropertyMapper
 {
     private static readonly Dictionary<Type, Dictionary<string, string?>> _typesRequestKeyToPropertyMaps = new();
     public string? MapRequestNameToPropertyName<T>(string? propertyName)
@@ -57,7 +57,7 @@ internal class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
     }
 }
 
-public interface IPagedRequestPropertyMapper
+public interface IRequestPropertyMapper
 {
     string? MapRequestNameToPropertyName<T>(string? propertyName);
     string? MapNestedRequestNameToPropertyName<T>(string? propertyName, Type nested);

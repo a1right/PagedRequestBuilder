@@ -10,10 +10,10 @@ namespace PagedRequestBuilder.Builders;
 
 public class SorterBuilder<T> : ISorterBuilder<T> where T : class
 {
-    private readonly IPagedRequestPropertyMapper _propertyMapper;
+    private readonly IRequestPropertyMapper _propertyMapper;
     private readonly IQuerySorterCache<T> _querySorterCache;
 
-    public SorterBuilder(IPagedRequestPropertyMapper propertyMapper, IQuerySorterCache<T> querySorterCache)
+    public SorterBuilder(IRequestPropertyMapper propertyMapper, IQuerySorterCache<T> querySorterCache)
     {
         _propertyMapper = propertyMapper;
         _querySorterCache = querySorterCache;

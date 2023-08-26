@@ -26,8 +26,10 @@ internal class PagedRequestValueParser : IPagedRequestValueParser
 
     private ValueParseResult ParseArray(JsonArray node, Type assignablePropertyType)
     {
-        var value = node.ToArray();
-        var parseResult = value.Select(x => GetValue(x, assignablePropertyType)).ToArray();
+        var parseResult = node
+            .Select(x => GetValue(x, assignablePropertyType))
+            .ToArray();
+
         var result = Array.CreateInstance(parseResult.First().ValueType, parseResult.Length);
 
         for (var index = 0; index < parseResult.Length; index++)

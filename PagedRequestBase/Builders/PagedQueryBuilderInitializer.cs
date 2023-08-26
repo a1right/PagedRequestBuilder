@@ -4,5 +4,5 @@ namespace PagedRequestBuilder.Builders;
 
 public static class PagedQueryBuilder
 {
-    public static void Initialize() => PagedRequestPropertyMapper.ScanPagedRequestKeys();
+    public static void Initialize() => RequestPropertyMapper.ScanPagedRequestKeys();
 }

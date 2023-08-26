@@ -13,7 +13,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddPagedQueryBuilder(this IServiceCollection services)
     {
-        services.AddSingleton<IPagedRequestPropertyMapper, PagedRequestPropertyMapper>();
+        services.AddSingleton<IRequestPropertyMapper, RequestPropertyMapper>();
         services.AddBuilders();
         services.AddCaching();
         services.AddMethodInfo();
