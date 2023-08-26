@@ -6,15 +6,15 @@ namespace PagedRequestBuilder.Common.ValueParser
 {
     public class StringParseStrategy : IValueParseStrategy
     {
-        public ValueParseResult GetValue(JsonNode node, Type assignablePropertyType)
+        public ValueParseResult GetValue(JsonValue value, Type assignablePropertyType)
         {
-            if (DateTime.TryParse(node.GetValue<string>(), out var dateTime))
+            if (DateTime.TryParse(value.GetValue<string>(), out var dateTime))
                 return new ValueParseResult(dateTime.ToUniversalTime(), typeof(DateTime));
 
-            if (Guid.TryParse(node.GetValue<string>(), out var guid))
+            if (Guid.TryParse(value.GetValue<string>(), out var guid))
                 return new ValueParseResult(guid, typeof(Guid));
 
-            return new ValueParseResult(node.GetValue<string>(), typeof(string));
+            return new ValueParseResult(value.GetValue<string>(), typeof(string));
         }
     }
 }

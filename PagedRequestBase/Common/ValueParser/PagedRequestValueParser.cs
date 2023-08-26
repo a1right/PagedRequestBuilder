@@ -11,10 +11,10 @@ namespace PagedRequestBuilder.Common.ValueParser
         public ValueParseResult GetValue(JsonNode node, Type assignablePropertyType)
         {
             if (node is JsonArray array)
-                return ParseArray(node, assignablePropertyType);
+                return ParseArray(array, assignablePropertyType);
 
             if (node is JsonValue value)
-                return GetStrategy(node).GetValue(node, assignablePropertyType);
+                return GetStrategy(node).GetValue(value, assignablePropertyType);
 
             throw new NotImplementedException();
         }
@@ -35,9 +35,9 @@ namespace PagedRequestBuilder.Common.ValueParser
             throw new NotImplementedException();
         }
 
-        public ValueParseResult ParseArray(JsonNode node, Type assignablePropertyType)
+        public ValueParseResult ParseArray(JsonArray node, Type assignablePropertyType)
         {
-            var value = node.AsArray().ToArray();
+            var value = node.ToArray();
             var parseResult = value.Select(x => GetValue(x, assignablePropertyType)).ToArray();
             var result = Array.CreateInstance(parseResult.First().ValueType, parseResult.Length);
 
