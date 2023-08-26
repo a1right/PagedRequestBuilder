@@ -1,4 +1,6 @@
 ﻿using PagedRequestBuilder.Attributes;
+using PagedRequestBuilder.Constant;
+using PagedRequestBuilder.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +21,7 @@ internal class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
             if (_typesRequestKeyToPropertyMaps[containingType].ContainsKey(propertyName))
                 return _typesRequestKeyToPropertyMaps[containingType][propertyName];
 
-        throw new NotImplementedException($"Type '{containingType.FullName}' do not contains paged request key '{propertyName}'");
+        throw new NotImplementedException(Constants.Errors.Templates.TypeNotContainsPagedRequestKey.Format(containingType.FullName, propertyName));
     }
 
     public string? MapNestedRequestNameToPropertyName<T>(string? propertyName, Type nested)
@@ -31,7 +33,7 @@ internal class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
             if (_typesRequestKeyToPropertyMaps[nested].ContainsKey(propertyName))
                 return _typesRequestKeyToPropertyMaps[nested][propertyName];
 
-        throw new NotImplementedException($"Type '{nested.FullName}' do not contains paged request key '{propertyName}'");
+        throw new NotImplementedException(Constants.Errors.Templates.TypeNotContainsPagedRequestKey.Format(nested.FullName, propertyName));
     }
 
     public static void ScanPagedRequestKeys()

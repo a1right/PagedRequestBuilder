@@ -22,12 +22,11 @@ internal static class Constants
     {
         public static class Static
         {
-
         }
 
         public static class Templates
         {
-
+            public const string TypeNotContainsPagedRequestKey = "Type '{0}' do not contains paged request key '{1}'";
         }
     }
 }
