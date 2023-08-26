@@ -1,5 +1,5 @@
 ﻿using PagedRequestBuilder.Cache;
-using PagedRequestBuilder.Common;
+using PagedRequestBuilder.Common.ValueParser;
 using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Models.Filter;
 using System;

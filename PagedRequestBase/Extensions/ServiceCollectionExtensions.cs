@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PagedRequestBuilder.Builders;
 using PagedRequestBuilder.Cache;
-using PagedRequestBuilder.Common;
 using PagedRequestBuilder.Common.MethodInfoProvider;
+using PagedRequestBuilder.Common.ValueParser;
 
 namespace PagedRequestBuilder.Extensions
 {

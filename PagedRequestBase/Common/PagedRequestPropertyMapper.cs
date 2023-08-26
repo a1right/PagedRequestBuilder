@@ -37,7 +37,9 @@ internal class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
         var types = AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetTypes()
             .Where(t => t.GetProperties()
                 .Any(p => p
-                    .IsDefined(typeof(PagedRequestKeyAttribute), true)))).SelectMany(x => x).ToList();
+                    .IsDefined(typeof(PagedRequestKeyAttribute), true))))
+            .SelectMany(x => x)
+            .ToList();
 
         foreach (var type in types)
         {

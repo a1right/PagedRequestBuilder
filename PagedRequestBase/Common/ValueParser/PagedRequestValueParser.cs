@@ -4,19 +4,20 @@ using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
-namespace PagedRequestBuilder.Common
+namespace PagedRequestBuilder.Common.ValueParser
 {
     internal class PagedRequestValueParser : IPagedRequestValueParser
     {
         public ValueParseResult GetValue(JsonNode node, Type assignablePropertyType)
         {
             if (node is JsonArray array)
-            {
                 return ArrayDeserealizationStrategy(node, assignablePropertyType);
-            }
+
             var value = node.GetValue<JsonElement>();
-            if (value.ValueKind is JsonValueKind.Number)
-                return NumberDeserealizationStrategy(node, assignablePropertyType);
+
+            if (node.)
+                if (value.ValueKind is JsonValueKind.Number)
+                    return NumberDeserealizationStrategy(node, assignablePropertyType);
 
             if (value.ValueKind is JsonValueKind.String)
                 return StringDeserealizationStrategy(node);
@@ -100,6 +101,7 @@ namespace PagedRequestBuilder.Common
             {
                 result.SetValue(parseResult[index].Value, index);
             }
+
             return new ValueParseResult(result, result.GetType());
         }
     }
@@ -119,6 +121,5 @@ namespace PagedRequestBuilder.Common
             Value = value;
             ValueType = valueType;
         }
-
     }
 }
