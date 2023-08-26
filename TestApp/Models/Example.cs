@@ -9,7 +9,7 @@ public class Example
     [PagedRequestKey("string")]
     public string String { get; set; }
     [PagedRequestKey("strings")]
-    public string[] Strings { get; set; }
+    public List<string> Strings { get; set; }
     [PagedRequestKey("date")]
     public DateTime Date { get; set; }
     [PagedRequestKey("enum")]

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedRequestBuilder.Constant;
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -8,7 +9,7 @@ internal class ArrayMethodInfoStrategy : IMethodInfoStrategy
 {
     public MethodInfo GetMethodInfo(string name, Type assignablePropertyType) => name switch
     {
-        "Contains" => GetArrayMethod(name, assignablePropertyType),
+        Constants.MethodInfoNames.Contains => GetArrayMethod(name, assignablePropertyType),
 
         _ => throw new NotImplementedException(name),
     };

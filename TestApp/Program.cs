@@ -60,7 +60,7 @@ public class Program
                 Decimal = (decimal)(0.1 * x),
                 Enum = (ExampleEnum)x,
                 String = $"string {x}",
-                Strings = new[] { $"string {x}" },
+                Strings = new() { $"string {x}" },
                 Guid = Guid.Parse($"CA0EA80A-322C-436D-8E23-C638A30CF8F{x % 10}"),
                 Decimals = new List<decimal> { 0.1m * x },
                 Ints = new[] { x },
