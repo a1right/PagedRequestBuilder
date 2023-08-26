@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+namespace PagedRequestBuilder.Common;
+
 internal class PagedRequestPropertyMapper : IPagedRequestPropertyMapper
 {
     private static readonly Dictionary<Type, Dictionary<string, string?>> _typesRequestKeyToPropertyMaps = new();

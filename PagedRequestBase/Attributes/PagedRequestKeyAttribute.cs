@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace PagedRequestBuilder.Attributes
+namespace PagedRequestBuilder.Attributes;
+
+[AttributeUsage(AttributeTargets.Property)]
+public class PagedRequestKeyAttribute : Attribute
 {
-    [AttributeUsage(AttributeTargets.Property)]
-    public class PagedRequestKeyAttribute : Attribute
+    public string RequestKey { get; }
+    public string? TargetProperty { get; }
+    public PagedRequestKeyAttribute(string key, [CallerMemberName] string? property = null)
     {
-        public string RequestKey { get; }
-        public string? TargetProperty { get; }
-        public PagedRequestKeyAttribute(string key, [CallerMemberName] string? property = null)
-        {
-            RequestKey = key;
-            TargetProperty = property;
-        }
+        RequestKey = key;
+        TargetProperty = property;
     }
 }

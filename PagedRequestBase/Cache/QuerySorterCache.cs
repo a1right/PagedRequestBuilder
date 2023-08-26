@@ -1,28 +1,27 @@
 ﻿using PagedRequestBuilder.Models.Sorter;
 using System.Collections.Concurrent;
 
-namespace PagedRequestBuilder.Cache
+namespace PagedRequestBuilder.Cache;
+
+internal class QuerySorterCache<T> : IQuerySorterCache<T>
 {
-    internal class QuerySorterCache<T> : IQuerySorterCache<T>
+    private ConcurrentDictionary<SorterEntry, IQuerySorter<T>> _queryFilterCache = new();
+    public IQuerySorter<T>? Get(SorterEntry entry)
     {
-        private ConcurrentDictionary<SorterEntry, IQuerySorter<T>> _queryFilterCache = new();
-        public IQuerySorter<T>? Get(SorterEntry entry)
-        {
-            if (_queryFilterCache.TryGetValue(entry, out var compiledSorter))
-                return compiledSorter;
+        if (_queryFilterCache.TryGetValue(entry, out var compiledSorter))
+            return compiledSorter;
 
-            return null;
-        }
-
-        public void Set(SorterEntry entry, IQuerySorter<T> filter)
-        {
-            _queryFilterCache.AddOrUpdate(entry, filter, (key, oldValue) => filter);
-        }
+        return null;
     }
 
-    public interface IQuerySorterCache<T>
+    public void Set(SorterEntry entry, IQuerySorter<T> filter)
     {
-        IQuerySorter<T>? Get(SorterEntry entry);
-        void Set(SorterEntry entry, IQuerySorter<T> filter);
+        _queryFilterCache.AddOrUpdate(entry, filter, (key, oldValue) => filter);
     }
+}
+
+public interface IQuerySorterCache<T>
+{
+    IQuerySorter<T>? Get(SorterEntry entry);
+    void Set(SorterEntry entry, IQuerySorter<T> filter);
 }

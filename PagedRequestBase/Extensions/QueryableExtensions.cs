@@ -3,66 +3,65 @@ using PagedRequestBuilder.Models.Sorter;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PagedRequestBuilder.Extensions
+namespace PagedRequestBuilder.Extensions;
+
+internal static class QueryableExtensions
 {
-    public static class QueryableExtensions
+    public static IQueryable<T> Where<T>(this IQueryable<T> query, IEnumerable<IQueryFilter<T>> filters)
     {
-        public static IQueryable<T> Where<T>(this IQueryable<T> query, IEnumerable<IQueryFilter<T>> filters)
-        {
-            foreach (var filter in filters)
-            {
-                query = query.Where(filter.Filter);
-            }
-
-            return query;
-        }
-
-        public static IQueryable<T> Where<T>(this IQueryable<T> query, IQueryFilter<T> filter)
+        foreach (var filter in filters)
         {
             query = query.Where(filter.Filter);
-
-            return query;
         }
 
-        public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, IQuerySorter<T> sorter)
-        {
-            return sorter.Descending ? query.OrderByDescending(sorter.Sorter) : query.OrderBy(sorter.Sorter);
-        }
+        return query;
+    }
 
-        public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, IEnumerable<IQuerySorter<T>> sorters)
+    public static IQueryable<T> Where<T>(this IQueryable<T> query, IQueryFilter<T> filter)
+    {
+        query = query.Where(filter.Filter);
+
+        return query;
+    }
+
+    public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, IQuerySorter<T> sorter)
+    {
+        return sorter.Descending ? query.OrderByDescending(sorter.Sorter) : query.OrderBy(sorter.Sorter);
+    }
+
+    public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, IEnumerable<IQuerySorter<T>> sorters)
+    {
+        var firstSort = true;
+        IOrderedQueryable<T> orderedQuery;
+        foreach (var sorter in sorters)
         {
-            var firstSort = true;
-            IOrderedQueryable<T> orderedQuery;
-            foreach (var sorter in sorters)
+            if (firstSort)
             {
-                if (firstSort)
-                {
-                    query = query.OrderBy(sorter);
-                    firstSort = false;
-                    continue;
-                }
-
-                orderedQuery = (IOrderedQueryable<T>)query;
-                query = orderedQuery.ThenBy(sorter);
-
+                query = query.OrderBy(sorter);
+                firstSort = false;
+                continue;
             }
 
-            return query;
+            orderedQuery = (IOrderedQueryable<T>)query;
+            query = orderedQuery.ThenBy(sorter);
+
         }
 
-        public static IQueryable<T> ThenBy<T>(this IOrderedQueryable<T> query, IQuerySorter<T> sorter)
-        {
-            return sorter.Descending ? query.ThenByDescending(sorter.Sorter) : query.ThenBy(sorter.Sorter);
-        }
+        return query;
+    }
 
-        public static IQueryable<T> Paginate<T>(this IQueryable<T> query, int? size, int? page)
-        {
-            if (size == 0 || page < 1)
-                return Enumerable.Empty<T>().AsQueryable();
+    public static IQueryable<T> ThenBy<T>(this IOrderedQueryable<T> query, IQuerySorter<T> sorter)
+    {
+        return sorter.Descending ? query.ThenByDescending(sorter.Sorter) : query.ThenBy(sorter.Sorter);
+    }
 
-            return query
-                .Skip((size!.Value * (page!.Value - 1)))
-                .Take(size!.Value);
-        }
+    public static IQueryable<T> Paginate<T>(this IQueryable<T> query, int? size, int? page)
+    {
+        if (size == 0 || page < 1)
+            return Enumerable.Empty<T>().AsQueryable();
+
+        return query
+            .Skip((size!.Value * (page!.Value - 1)))
+            .Take(size!.Value);
     }
 }

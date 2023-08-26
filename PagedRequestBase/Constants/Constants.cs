@@ -1,0 +1,33 @@
+﻿namespace PagedRequestBuilder.Constant;
+internal static class Constants
+{
+    public static class RequestOperations
+    {
+        public const string Equal = "=";
+        public const string NotEqual = "!=";
+        public const string GreaterThen = ">";
+        public const string GreaterThenOrEquals = ">=";
+        public const string LessThen = "<";
+        public const string LessThenOrEqual = "<=";
+        public const string Contains = "contains";
+        public const string In = "in";
+    }
+
+    public static class MethodInfoNames
+    {
+        public const string Contains = "Contains";
+    }
+
+    public static class Errors
+    {
+        public static class Static
+        {
+
+        }
+
+        public static class Templates
+        {
+
+        }
+    }
+}

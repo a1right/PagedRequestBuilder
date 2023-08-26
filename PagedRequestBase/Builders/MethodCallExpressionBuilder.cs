@@ -2,30 +2,29 @@
 using System;
 using System.Linq.Expressions;
 
-namespace PagedRequestBuilder.Builders
+namespace PagedRequestBuilder.Builders;
+
+public class MethodCallExpressionBuilder : IMethodCallExpressionBuilder
 {
-    public class MethodCallExpressionBuilder : IMethodCallExpressionBuilder
+    private readonly IMethodInfoProvider _methodInfoProvider;
+
+    public MethodCallExpressionBuilder(IMethodInfoProvider methodInfoProvider)
     {
-        private readonly IMethodInfoProvider _methodInfoProvider;
-
-        public MethodCallExpressionBuilder(IMethodInfoProvider methodInfoProvider)
-        {
-            _methodInfoProvider = methodInfoProvider;
-        }
-
-        public Expression Build(string name, Expression left, Expression right, Type assignablePropertyType)
-        {
-            var method = _methodInfoProvider.GetMethodInfo(name, assignablePropertyType);
-
-            if (method.IsStatic)
-                return Expression.Call(method, left, right);
-
-            return Expression.Call(left, method, right);
-        }
+        _methodInfoProvider = methodInfoProvider;
     }
 
-    public interface IMethodCallExpressionBuilder
+    public Expression Build(string name, Expression left, Expression right, Type assignablePropertyType)
     {
-        Expression Build(string name, Expression left, Expression right, Type assignablePropertyType);
+        var method = _methodInfoProvider.GetMethodInfo(name, assignablePropertyType);
+
+        if (method.IsStatic)
+            return Expression.Call(method, left, right);
+
+        return Expression.Call(left, method, right);
     }
+}
+
+public interface IMethodCallExpressionBuilder
+{
+    Expression Build(string name, Expression left, Expression right, Type assignablePropertyType);
 }
