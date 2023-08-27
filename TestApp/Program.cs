@@ -75,7 +75,7 @@ public class Program
                     String = $"inner string {x}",
                     Nested = new()
                     {
-                        String = $" double inner string {x}",
+                        String = $"double inner string {x}",
                         EnumArray = new[] { Enum.Parse<ExampleEnum>((x % 3).ToString()) },
                         EnumList = new List<ExampleEnum> { Enum.Parse<ExampleEnum>((x % 3).ToString()) }
                     }

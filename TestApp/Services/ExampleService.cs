@@ -26,6 +26,8 @@ public class ExampleService : IExampleService
             .ThenInclude(x => x.Nested)
             .Select(x => x.Map<Example, ExampleDto>());
 
+        Console.WriteLine(query.ToQueryString());
+
         var data = await pagedQuery.ToListAsync();
         var total = await pagedQuery.CountAsync();
 
