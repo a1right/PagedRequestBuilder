@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PagedRequestBuilder", "Page
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.csproj", "{55FA3DBD-665E-44BF-B725-86F7C6F1691E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Benchmarks", "Benchmarks\Benchmarks.csproj", "{3D42FA08-73F8-47CD-9D29-A776A105D827}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{55FA3DBD-665E-44BF-B725-86F7C6F1691E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55FA3DBD-665E-44BF-B725-86F7C6F1691E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55FA3DBD-665E-44BF-B725-86F7C6F1691E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D42FA08-73F8-47CD-9D29-A776A105D827}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D42FA08-73F8-47CD-9D29-A776A105D827}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D42FA08-73F8-47CD-9D29-A776A105D827}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D42FA08-73F8-47CD-9D29-A776A105D827}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

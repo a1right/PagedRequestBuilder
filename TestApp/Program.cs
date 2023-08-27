@@ -1,8 +1,10 @@
+using BenchmarkDotNet.Running;
 using Microsoft.EntityFrameworkCore;
 using PagedRequestBuilder.Builders;
 using PagedRequestBuilder.Extensions;
 using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Services;
+using TestApp.Benchmarks;
 
 namespace PagedRequestTestApp;
 
@@ -10,6 +12,7 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        var summary = BenchmarkRunner.Run<Test>();
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
@@ -48,7 +51,6 @@ public class Program
         app.Run();
 
     }
-
     private static void Seed(ExampleContext context)
     {
         var daysShift = 0;
