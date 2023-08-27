@@ -12,9 +12,13 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        var summary = BenchmarkRunner.Run<Test>();
         var builder = WebApplication.CreateBuilder(args);
-
+        var environment = builder.Environment;
+        if (environment.IsEnvironment("benchmark"))
+        {
+            var summary = BenchmarkRunner.Run<Test>();
+            return;
+        }
         // Add services to the container.
 
         builder.Services.AddControllers();
