@@ -36,7 +36,6 @@ internal class ValueParseStrategyProvider : IValueParseStrategyProvider
 
         throw new NotImplementedException();
     }
-
 }
 
 internal interface IValueParseStrategyProvider

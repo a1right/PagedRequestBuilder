@@ -13,7 +13,7 @@ internal class PagedRequestValueParser : IPagedRequestValueParser
     {
         _parseStrategyProvider = parseStrategyProvider;
     }
-    public ValueParseResult GetValue(JsonNode node, Type assignablePropertyType)
+    public ValueParseResult GetValue(JsonNode? node, Type assignablePropertyType)
     {
         if (node is JsonArray array)
             return ParseArray(array, assignablePropertyType);
@@ -43,5 +43,5 @@ internal class PagedRequestValueParser : IPagedRequestValueParser
 
 public interface IPagedRequestValueParser
 {
-    ValueParseResult GetValue(JsonNode node, Type assignablePropertyType);
+    ValueParseResult GetValue(JsonNode? node, Type assignablePropertyType);
 }

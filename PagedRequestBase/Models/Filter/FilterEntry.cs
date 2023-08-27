@@ -27,31 +27,9 @@ public class FilterEntry
             Operation == other?.Operation;
 
         if (Nested is not null)
-            equals = equals && Nested.OrderBy(x => x).SequenceEqual(other.Nested.OrderBy(x => x));
+            equals = equals && Nested.OrderBy(x => x).SequenceEqual(other!.Nested.OrderBy(x => x));
 
         return equals;
-    }
-
-    public static bool operator ==(FilterEntry left, FilterEntry right)
-    {
-        if (left is null && right is not null)
-            return false;
-
-        if (left is null && right is null)
-            return true;
-
-        return left!.Equals(right);
-    }
-
-    public static bool operator !=(FilterEntry left, FilterEntry right)
-    {
-        if (left is null && right is not null)
-            return true;
-
-        if (left is null && right is null)
-            return false;
-
-        return !left!.Equals(right);
     }
 
     public override int GetHashCode()
@@ -59,7 +37,6 @@ public class FilterEntry
         var hashCode = 0;
         unchecked
         {
-
             if (Property is not null)
                 hashCode += Property.GetHashCode();
 

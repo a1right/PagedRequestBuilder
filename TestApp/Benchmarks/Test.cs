@@ -9,6 +9,9 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 
 namespace TestApp.Benchmarks;
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
+#pragma warning disable CS8601 // Possible null reference assignment.
 
 public class Test
 {
@@ -64,5 +67,4 @@ public class Test
 
         Console.WriteLine(query.ToQueryString());
     }
-
 }

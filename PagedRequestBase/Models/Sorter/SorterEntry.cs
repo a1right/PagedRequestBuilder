@@ -1,10 +1,12 @@
-﻿namespace PagedRequestBuilder.Models.Sorter;
+﻿using System.Linq;
 
+namespace PagedRequestBuilder.Models.Sorter;
 
 public class SorterEntry
 {
     public string? Property { get; set; }
     public bool? Descending { get; set; }
+    public string[]? Nested { get; set; }
 
     public override bool Equals(object? obj)
     {
@@ -21,29 +23,10 @@ public class SorterEntry
             Property == other.Property &&
             Descending == other.Descending;
 
+        if (Nested is not null)
+            equals = equals && Nested.OrderBy(x => x).SequenceEqual(other.Nested.OrderBy(x => x));
+
         return equals;
-    }
-
-    public static bool operator ==(SorterEntry left, SorterEntry right)
-    {
-        if (left is null && right is not null)
-            return false;
-
-        if (left is null && right is null)
-            return true;
-
-        return left!.Equals(right);
-    }
-
-    public static bool operator !=(SorterEntry left, SorterEntry right)
-    {
-        if (left is null && right is not null)
-            return true;
-
-        if (left is null && right is null)
-            return false;
-
-        return !left!.Equals(right);
     }
 
     public override int GetHashCode()

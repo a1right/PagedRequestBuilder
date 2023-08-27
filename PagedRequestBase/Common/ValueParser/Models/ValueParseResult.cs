@@ -8,7 +8,7 @@ public class ValueParseResult
     public object? Value { get; private set; }
     public Type ValueType { get; private set; }
 
-    public ValueParseResult(object value, Type valueType)
+    public ValueParseResult(object? value, Type valueType)
     {
         Value = value;
         ValueType = valueType;

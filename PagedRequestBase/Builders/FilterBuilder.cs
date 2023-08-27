@@ -31,11 +31,14 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
     }
     public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase<T>? request)
     {
-        if (request is null or { Filters: not { Count: > 0 } })
+        if (request is not { Filters: { Count: > 0 } })
             yield break;
 
         foreach (var filter in request.Filters)
         {
+            if (filter is null)
+                continue;
+
             var cached = _queryFilterCache.Get(filter);
             if (cached is not null)
             {
@@ -80,14 +83,13 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
             var newExpression = GetOperationExpression(propertySelector, converted, entry.Operation, assignablePropertyType);
             return Expression.Lambda<Func<T, bool>>(newExpression, parameter);
         }
-
         catch (Exception ex)
         {
             return null;
         }
     }
 
-    private Expression GetOperationExpression(Expression left, Expression right, string operation, Type assignablePropertyType) => operation switch
+    private Expression GetOperationExpression(Expression left, Expression right, string? operation, Type assignablePropertyType) => operation switch
     {
         Strings.RequestOperations.Equal => Expression.Equal(left, right),
         Strings.RequestOperations.GreaterThen => Expression.GreaterThan(left, right),
@@ -100,7 +102,6 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
 
         _ => throw new NotImplementedException()
     };
-
 }
 
 public interface IFilterBuilder<T> where T : class

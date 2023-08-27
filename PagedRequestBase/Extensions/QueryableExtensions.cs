@@ -44,7 +44,6 @@ internal static class QueryableExtensions
 
             orderedQuery = (IOrderedQueryable<T>)query;
             query = orderedQuery.ThenBy(sorter);
-
         }
 
         return query;
