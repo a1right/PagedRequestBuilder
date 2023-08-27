@@ -6,19 +6,33 @@ using PagedRequestBuilder.Common.MethodInfoProvider;
 using PagedRequestBuilder.Common.MethodInfoProvider.Strategies;
 using PagedRequestBuilder.Common.ValueParser;
 using PagedRequestBuilder.Common.ValueParser.Strategies;
+using PagedRequestBuilder.Models;
+using System;
 
 namespace PagedRequestBuilder.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddPagedQueryBuilder(this IServiceCollection services)
+    public static IServiceCollection AddPagedQueryBuilder(this IServiceCollection services, Action<PaginationConfig>? config = null)
     {
         services.AddSingleton<IRequestPropertyMapper, RequestPropertyMapper>();
         services.AddBuilders();
         services.AddCaching();
         services.AddMethodInfo();
         services.AddValueParser();
+
+        SetDefaultPagintationSettings(config);
+
         return services;
+    }
+
+    private static void SetDefaultPagintationSettings(Action<PaginationConfig>? config = null)
+    {
+        var options = new PaginationConfig();
+        config?.Invoke(options);
+
+        PaginationSetting.DefaultPageSize = options.DefaultPageSize < 1 ? Constants.DefaultPaginationSettings.DefaultPageSize : options.DefaultPageSize;
+        PaginationSetting.DefaultPageNumber = options.DefaultPageNumber < 1 ? Constants.DefaultPaginationSettings.DefaultPageNumber : options.DefaultPageNumber;
     }
 
     private static IServiceCollection AddMethodInfo(this IServiceCollection services)

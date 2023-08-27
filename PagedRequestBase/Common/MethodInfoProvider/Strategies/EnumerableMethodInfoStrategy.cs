@@ -1,4 +1,4 @@
-﻿using PagedRequestBuilder.Constant;
+﻿using PagedRequestBuilder.Constants;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -15,7 +15,7 @@ internal class EnumerableMethodInfoStrategy : IMethodInfoStrategy
 
     public MethodInfo Get(string name, Type enumerableOfType) => name switch
     {
-        Constants.MethodInfoNames.Contains => GetStaticGenericMethod(name, enumerableOfType),
+        Strings.MethodInfoNames.Contains => GetStaticGenericMethod(name, enumerableOfType),
 
         _ => throw new NotImplementedException(name),
     };

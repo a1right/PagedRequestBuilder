@@ -16,5 +16,4 @@ internal class QuerySorter<T> : IQuerySorter<T>
         _keySelector = keySelector;
         _descending = descending;
     }
-    public static implicit operator Expression<Func<T, object>>(QuerySorter<T> filter) => filter._keySelector;
 }

@@ -1,4 +1,4 @@
-﻿using PagedRequestBuilder.Constant;
+﻿using PagedRequestBuilder.Constants;
 using System;
 using System.Reflection;
 
@@ -8,7 +8,7 @@ internal class StringMethodInfoStrategy : IMethodInfoStrategy
 {
     public MethodInfo GetMethodInfo(string name, Type assignablePropertyType) => name switch
     {
-        Constants.MethodInfoNames.Contains => typeof(string).GetMethod(name, new[] { typeof(string) }),
+        Strings.MethodInfoNames.Contains => typeof(string).GetMethod(name, new[] { typeof(string) }),
 
         _ => throw new NotImplementedException(name),
     };

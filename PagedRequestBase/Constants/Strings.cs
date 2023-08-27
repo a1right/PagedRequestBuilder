@@ -1,5 +1,5 @@
-﻿namespace PagedRequestBuilder.Constant;
-internal static class Constants
+﻿namespace PagedRequestBuilder.Constants;
+internal static class Strings
 {
     public static class RequestOperations
     {
@@ -29,4 +29,9 @@ internal static class Constants
             public const string TypeNotContainsPagedRequestKey = "Type '{0}' do not contains paged request key '{1}'";
         }
     }
+}
+internal static class DefaultPaginationSettings
+{
+    public const int DefaultPageNumber = 1;
+    public const int DefaultPageSize = 10;
 }

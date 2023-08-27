@@ -1,4 +1,4 @@
-﻿using PagedRequestBuilder.Constant;
+﻿using PagedRequestBuilder.Constants;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -15,7 +15,7 @@ internal class ArrayMethodInfoStrategy : IMethodInfoStrategy
 
     public MethodInfo Get(string name, Type arrayOfType) => name switch
     {
-        Constants.MethodInfoNames.Contains => GetStaticGenericMethod(name, arrayOfType),
+        Strings.MethodInfoNames.Contains => GetStaticGenericMethod(name, arrayOfType),
 
         _ => throw new NotImplementedException(name),
     };

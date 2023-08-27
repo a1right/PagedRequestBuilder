@@ -1,4 +1,5 @@
-﻿using PagedRequestBuilder.Models.Filter;
+﻿using PagedRequestBuilder.Common;
+using PagedRequestBuilder.Models.Filter;
 using PagedRequestBuilder.Models.Sorter;
 using System.Collections.Generic;
 
@@ -13,12 +14,12 @@ public abstract class PagedRequestBase<T>
     public List<SorterEntry>? Sorters { get; set; } = new();
     public int? Page
     {
-        get => _page ?? 1;
+        get => _page ?? PaginationSetting.DefaultPageNumber;
         set => _page = value;
     }
     public int? Size
     {
-        get => _size ?? 10;
+        get => _size ?? PaginationSetting.DefaultPageSize;
         set => _size = value;
     }
 }

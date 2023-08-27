@@ -2,7 +2,7 @@
 using PagedRequestBuilder.Common;
 using PagedRequestBuilder.Common.ValueParser;
 using PagedRequestBuilder.Common.ValueParser.Models;
-using PagedRequestBuilder.Constant;
+using PagedRequestBuilder.Constants;
 using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Models.Filter;
 using System;
@@ -89,14 +89,14 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
 
     private Expression GetOperationExpression(Expression left, Expression right, string operation, Type assignablePropertyType) => operation switch
     {
-        Constants.RequestOperations.Equal => Expression.Equal(left, right),
-        Constants.RequestOperations.GreaterThen => Expression.GreaterThan(left, right),
-        Constants.RequestOperations.GreaterThenOrEquals => Expression.GreaterThanOrEqual(left, right),
-        Constants.RequestOperations.LessThen => Expression.LessThan(left, right),
-        Constants.RequestOperations.LessThenOrEqual => Expression.LessThanOrEqual(left, right),
-        Constants.RequestOperations.NotEqual => Expression.NotEqual(left, right),
-        Constants.RequestOperations.Contains => _methodCallExpressionBuilder.Build(Constants.MethodInfoNames.Contains, left, right, assignablePropertyType),
-        Constants.RequestOperations.In => _methodCallExpressionBuilder.Build(Constants.MethodInfoNames.Contains, right, left, right.Type),
+        Strings.RequestOperations.Equal => Expression.Equal(left, right),
+        Strings.RequestOperations.GreaterThen => Expression.GreaterThan(left, right),
+        Strings.RequestOperations.GreaterThenOrEquals => Expression.GreaterThanOrEqual(left, right),
+        Strings.RequestOperations.LessThen => Expression.LessThan(left, right),
+        Strings.RequestOperations.LessThenOrEqual => Expression.LessThanOrEqual(left, right),
+        Strings.RequestOperations.NotEqual => Expression.NotEqual(left, right),
+        Strings.RequestOperations.Contains => _methodCallExpressionBuilder.Build(Strings.MethodInfoNames.Contains, left, right, assignablePropertyType),
+        Strings.RequestOperations.In => _methodCallExpressionBuilder.Build(Strings.MethodInfoNames.Contains, right, left, right.Type),
 
         _ => throw new NotImplementedException()
     };
