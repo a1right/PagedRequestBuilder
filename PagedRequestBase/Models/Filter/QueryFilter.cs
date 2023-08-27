@@ -12,6 +12,7 @@ internal class QueryFilter<T> : IQueryFilter<T>
     {
         _filterExpression = filterExpression;
     }
-    public static implicit operator Expression<Func<T, bool>>(QueryFilter<T> filter) => filter._filterExpression;
+
+    public static explicit operator Expression<Func<T, bool>>(QueryFilter<T> filter) => filter._filterExpression;
     public static explicit operator QueryFilter<T>(Expression<Func<T, bool>> expression) => new QueryFilter<T>(expression);
 }
