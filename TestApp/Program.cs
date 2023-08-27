@@ -12,6 +12,11 @@ public class Program
 {
     public static void Main(string[] args)
     {
+        var test = new Test();
+        test.Setup();
+        test.BuildQuery_Caching_Enabled();
+        test.CleanUp();
+        return;
         var builder = WebApplication.CreateBuilder(args);
         var environment = builder.Environment;
         if (environment.IsEnvironment("benchmark"))

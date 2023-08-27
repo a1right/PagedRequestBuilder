@@ -13,7 +13,7 @@ internal class StringParseStrategy : IValueParseStrategy
         if (assignablePropertyType.IsArray)
             return ForArrayAssignType(value, assignablePropertyType);
 
-        if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType))
+        if (typeof(IEnumerable).IsAssignableFrom(assignablePropertyType) && assignablePropertyType != typeof(string))
             return ForEnumerableAssignType(value, assignablePropertyType);
 
         return ForPrimitiveAssignType(value, assignablePropertyType);

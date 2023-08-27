@@ -37,7 +37,6 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(typeof(IQueryFilterCache<>), typeof(QueryFilterCache<>));
         services.AddSingleton(typeof(IQuerySorterCache<>), typeof(QuerySorterCache<>));
         services.AddSingleton<IMethodInfoCache, MethodInfoCache>();
-        services.AddSingleton<IPropertyTypeCache, PropertyTypeCache>();
         return services;
     }
 

@@ -17,20 +17,17 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
     private readonly IRequestPropertyMapper _propertyMapper;
     private readonly IQueryFilterCache<T> _queryFilterCache;
     private readonly IMethodCallExpressionBuilder _methodCallExpressionBuilder;
-    private readonly IPropertyTypeCache _propertyTypeCache;
 
     public FilterBuilder(
         IPagedRequestValueParser valueParser,
         IRequestPropertyMapper propertyMapper,
         IQueryFilterCache<T> queryFilterCache,
-        IMethodCallExpressionBuilder methodCallExpressionBuilder,
-        IPropertyTypeCache propertyInfoCache)
+        IMethodCallExpressionBuilder methodCallExpressionBuilder)
     {
         _valueParser = valueParser;
         _propertyMapper = propertyMapper;
         _queryFilterCache = queryFilterCache;
         _methodCallExpressionBuilder = methodCallExpressionBuilder;
-        _propertyTypeCache = propertyInfoCache;
     }
     public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase<T>? request)
     {
@@ -64,7 +61,7 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
             var parameter = Expression.Parameter(typeof(T), "x");
             var typePropertyName = _propertyMapper.MapRequestNameToPropertyName<T>(entry.Property);
             var propertySelector = Expression.PropertyOrField(parameter, typePropertyName);
-            var assignablePropertyType = _propertyTypeCache.GetOrAdd<T>(typePropertyName);
+            var assignablePropertyType = typeof(T).GetProperty(typePropertyName).PropertyType;
 
             if (entry.Nested is not null)
             {
