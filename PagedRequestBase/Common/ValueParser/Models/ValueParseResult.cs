@@ -5,8 +5,8 @@ namespace PagedRequestBuilder.Common.ValueParser.Models;
 
 public class ValueParseResult
 {
-    public object? Value { get; private set; }
-    public Type ValueType { get; private set; }
+    public object? Value { get; }
+    public Type ValueType { get; }
 
     public ValueParseResult(object? value, Type valueType)
     {
@@ -14,7 +14,7 @@ public class ValueParseResult
         ValueType = valueType;
     }
 
-    public static ValueParseResult New<T>(T value) => new ValueParseResult(value, typeof(T));
-    public static ValueParseResult New<T>(T value, Type valueType) => new ValueParseResult(value, valueType);
-    public static ValueParseResult New<T>(JsonNode value) => new ValueParseResult(value.GetValue<T>(), typeof(T));
+    public static ValueParseResult New<T>(T value) => new(value, typeof(T));
+    public static ValueParseResult New<T>(T value, Type valueType) => new(value, valueType);
+    public static ValueParseResult New<T>(JsonNode value) => new(value.GetValue<T>(), typeof(T));
 }

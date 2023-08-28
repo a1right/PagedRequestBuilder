@@ -8,12 +8,10 @@ namespace PagedRequestTestApp.Controllers;
 [Route("[controller]")]
 public class ExamplesController : ControllerBase
 {
-    private readonly ExampleContext _context;
     private readonly IExampleService _exampleService;
 
-    public ExamplesController(ExampleContext context, IExampleService exampleService)
+    public ExamplesController(IExampleService exampleService)
     {
-        _context = context;
         _exampleService = exampleService;
     }
 

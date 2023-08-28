@@ -25,14 +25,9 @@ internal class PagedQueryBuilder<T> : IPagedQueryBuilder<T>
         BuildQueryBase(query, request)
         .Paginate(size, page);
 
-    private IQueryable<T> BuildQueryBase(IQueryable<T> query, PagedRequestBase<T> request)
-    {
-        query = query
-            .Where(_filterBuilder.BuildFilters(request))
-            .OrderBy(_sorterBuilder.BuildSorters(request));
-
-        return query;
-    }
+    private IQueryable<T> BuildQueryBase(IQueryable<T> query, PagedRequestBase<T> request) => query
+        .Where(_filterBuilder.BuildFilters(request))
+        .OrderBy(_sorterBuilder.BuildSorters(request));
 }
 
 public interface IPagedQueryBuilder<T>

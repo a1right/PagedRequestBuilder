@@ -26,6 +26,9 @@ public class SorterBuilder<T> : ISorterBuilder<T> where T : class
 
         foreach (var sorter in request.Sorters)
         {
+            if (sorter is null)
+                continue;
+
             var cached = _querySorterCache.Get(sorter);
             if (cached is not null)
             {

@@ -24,10 +24,9 @@ internal static class QueryableExtensions
         return query;
     }
 
-    public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, IQuerySorter<T> sorter)
-    {
-        return sorter.Descending ? query.OrderByDescending(sorter.Sorter) : query.OrderBy(sorter.Sorter);
-    }
+    public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, IQuerySorter<T> sorter) => sorter.Descending
+        ? query.OrderByDescending(sorter.Sorter)
+        : query.OrderBy(sorter.Sorter);
 
     public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, IEnumerable<IQuerySorter<T>> sorters)
     {

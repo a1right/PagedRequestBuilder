@@ -6,7 +6,7 @@ namespace PagedRequestBuilder.Cache;
 
 public class MethodInfoCache : IMethodInfoCache
 {
-    private ConcurrentDictionary<Type, ConcurrentDictionary<string, MethodInfo>> _methods = new();
+    private readonly ConcurrentDictionary<Type, ConcurrentDictionary<string, MethodInfo>> _methods = new();
     public MethodInfo? Get(string name, Type assignablePropertyType)
     {
         if (_methods.TryGetValue(assignablePropertyType, out var cachedMethods))

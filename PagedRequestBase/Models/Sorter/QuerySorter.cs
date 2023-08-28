@@ -5,7 +5,7 @@ namespace PagedRequestBuilder.Models.Sorter;
 
 internal class QuerySorter<T> : IQuerySorter<T>
 {
-    private Expression<Func<T, object>> _keySelector;
+    private readonly Expression<Func<T, object>> _keySelector;
     private readonly bool _descending;
 
     public bool Descending => _descending;

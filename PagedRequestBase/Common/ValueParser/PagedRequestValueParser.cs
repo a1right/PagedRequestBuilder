@@ -30,7 +30,7 @@ internal class PagedRequestValueParser : IPagedRequestValueParser
             .Select(x => GetValue(x, assignablePropertyType))
             .ToArray();
 
-        var result = Array.CreateInstance(parseResult.First().ValueType, parseResult.Length);
+        var result = Array.CreateInstance(parseResult[0].ValueType, parseResult.Length);
 
         for (var index = 0; index < parseResult.Length; index++)
         {

@@ -5,7 +5,7 @@ namespace PagedRequestBuilder.Cache;
 
 internal class QuerySorterCache<T> : IQuerySorterCache<T>
 {
-    private ConcurrentDictionary<SorterEntry, IQuerySorter<T>> _queryFilterCache = new();
+    private readonly ConcurrentDictionary<SorterEntry, IQuerySorter<T>> _queryFilterCache = new();
     public IQuerySorter<T>? Get(SorterEntry entry)
     {
         _queryFilterCache.TryGetValue(entry, out var compiledSorter);
