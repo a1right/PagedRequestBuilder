@@ -29,7 +29,7 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
         _queryFilterCache = queryFilterCache;
         _methodCallExpressionBuilder = methodCallExpressionBuilder;
     }
-    public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase<T>? request)
+    public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase? request)
     {
         if (request is not { Filters: { Count: > 0 } })
             yield break;
@@ -106,5 +106,5 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
 
 public interface IFilterBuilder<T> where T : class
 {
-    IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase<T>? request);
+    IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase? request);
 }

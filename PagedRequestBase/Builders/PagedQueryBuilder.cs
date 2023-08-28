@@ -16,22 +16,22 @@ internal class PagedQueryBuilder<T> : IPagedQueryBuilder<T>
         _sorterBuilder = sorterBuilder;
     }
 
-    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase<T> request) where TQueryable : IQueryable<T> => (TQueryable)BuildQueryBase(query, request);
+    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request) where TQueryable : IQueryable<T> => (TQueryable)BuildQueryBase(query, request);
 
-    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase<T> request, Func<IQueryable<T>, IQueryable<T>> paginate) where TQueryable : IQueryable<T> =>
+    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request, Func<IQueryable<T>, IQueryable<T>> paginate) where TQueryable : IQueryable<T> =>
         (TQueryable)paginate(BuildQueryBase(query, request));
 
-    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase<T> request, int? page, int? size) where TQueryable : IQueryable<T> =>
+    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request, int? page, int? size) where TQueryable : IQueryable<T> =>
         (TQueryable)BuildQueryBase(query, request)
         .Paginate(size, page);
-    private IQueryable<T> BuildQueryBase(IQueryable<T> query, PagedRequestBase<T> request) => query
+    private IQueryable<T> BuildQueryBase(IQueryable<T> query, PagedRequestBase request) => query
         .Where(_filterBuilder.BuildFilters(request))
         .OrderBy(_sorterBuilder.BuildSorters(request));
 }
 
 public interface IPagedQueryBuilder<T>
 {
-    TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase<T> request) where TQueryable : IQueryable<T>;
-    TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase<T> request, Func<IQueryable<T>, IQueryable<T>> paginate) where TQueryable : IQueryable<T>;
-    TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase<T> request, int? page, int? size) where TQueryable : IQueryable<T>;
+    TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request) where TQueryable : IQueryable<T>;
+    TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request, Func<IQueryable<T>, IQueryable<T>> paginate) where TQueryable : IQueryable<T>;
+    TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request, int? page, int? size) where TQueryable : IQueryable<T>;
 }

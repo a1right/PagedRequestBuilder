@@ -19,7 +19,7 @@ public class SorterBuilder<T> : ISorterBuilder<T> where T : class
         _querySorterCache = querySorterCache;
     }
 
-    public IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase<T>? request)
+    public IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase? request)
     {
         if (request is not { Sorters: { Count: > 0 } })
             yield break;
@@ -77,5 +77,5 @@ public class SorterBuilder<T> : ISorterBuilder<T> where T : class
 
 public interface ISorterBuilder<T> where T : class
 {
-    IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase<T>? request);
+    IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase? request);
 }

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace PagedRequestBuilder.Models;
 
-public abstract class PagedRequestBase<T>
+public abstract class PagedRequestBase
 {
     private int? _size;
     private int? _page;

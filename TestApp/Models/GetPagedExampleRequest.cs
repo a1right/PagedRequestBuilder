@@ -1,5 +1,5 @@
 ﻿namespace PagedRequestBuilder.Models;
 
-public class GetPagedExampleRequest : PagedRequestBase<Example> { }
+public class GetPagedExampleRequest : PagedRequestBase { }
 
-public class GetPagedExampleDocument : PagedRequestBase<ExampleDocument> { }
+public class GetPagedExampleDocument : PagedRequestBase { }
