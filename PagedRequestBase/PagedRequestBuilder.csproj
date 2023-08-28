@@ -5,6 +5,11 @@
     <langversion>latest</langversion>
     <Nullable>enable</Nullable>
     <WarningAsErrors>CS8601,CS8602,CS8618</WarningAsErrors>
+    <PackageId>PagedRequestBuilder</PackageId>
+    <Version>1.0.0-rc1</Version>
+    <Authors>a1Right</Authors>
+    <PackageDescription>Generic pagination with builtin filters and sorters</PackageDescription>
+    <RepositoryUrl>https://github.com/a1right/ExpressionFilters</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,7 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
     <PackageReference Include="System.Text.Json" Version="7.0.3" />
   </ItemGroup>
