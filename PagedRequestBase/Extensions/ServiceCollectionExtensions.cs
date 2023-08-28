@@ -56,9 +56,9 @@ public static class ServiceCollectionExtensions
 
     private static IServiceCollection AddBuilders(this IServiceCollection services)
     {
-        services.AddScoped(typeof(IPagedQueryBuilder<>), typeof(PagedQueryBuilder<>));
-        services.AddScoped(typeof(IFilterBuilder<>), typeof(FilterBuilder<>));
-        services.AddScoped(typeof(ISorterBuilder<>), typeof(SorterBuilder<>));
+        services.AddSingleton(typeof(IPagedQueryBuilder<>), typeof(PagedQueryBuilder<>));
+        services.AddSingleton(typeof(IFilterBuilder<>), typeof(FilterBuilder<>));
+        services.AddSingleton(typeof(ISorterBuilder<>), typeof(SorterBuilder<>));
         services.AddSingleton<IMethodCallExpressionBuilder, MethodCallExpressionBuilder>();
         return services;
     }

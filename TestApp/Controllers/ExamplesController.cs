@@ -15,8 +15,15 @@ public class ExamplesController : ControllerBase
         _exampleService = exampleService;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> GetEvents([FromBody] GetPagedExampleRequest? request)
+    [HttpPost("relational")]
+    public async Task<IActionResult> GetPagedRelational([FromBody] GetPagedExampleRequest? request)
+    {
+        var response = await _exampleService.GetPaged(request);
+        return Ok(response);
+    }
+
+    [HttpPost("mongo")]
+    public async Task<IActionResult> GetPagedMongo([FromBody] GetPagedExampleDocument? request)
     {
         var response = await _exampleService.GetPaged(request);
         return Ok(response);

@@ -27,6 +27,7 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<ExampleContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("AppContext")));
         builder.Services.AddScoped<IExampleService, ExampleService>();
+        builder.Services.AddSingleton<ExampleMongoContext>();
         builder.Services.AddPagedQueryBuilder();
 
         var app = builder.Build();
@@ -46,16 +47,17 @@ public class Program
 
         using var scope = app.Services.CreateScope();
         using var context = scope.ServiceProvider.GetRequiredService<ExampleContext>();
+        var mongo = app.Services.GetService<ExampleMongoContext>();
         context.Database.EnsureDeleted();
         var created = context.Database.EnsureCreated();
         if (created)
-            Seed(context);
+            Seed(context, mongo!);
 
         PagedQueryBuilder.Initialize();
         app.Run();
 
     }
-    private static void Seed(ExampleContext context)
+    private static void Seed(ExampleContext context, ExampleMongoContext mongoContext)
     {
         var daysShift = 0;
         for (var i = 0; i < 5; i++)
@@ -84,5 +86,24 @@ public class Program
         }
 
         context.SaveChanges();
+
+        daysShift = 0;
+        var data = new List<ExampleDocument>();
+        for (var i = 0; i < 5; i++)
+        {
+            data.AddRange((Enumerable.Range(1, 10).Select(x => new ExampleDocument()
+            {
+                Date = DateTime.UtcNow.AddDays(-daysShift++),
+                Decimal = (decimal)(0.1 * x),
+                Enum = (ExampleEnum)x,
+                String = $"string {x}",
+                Strings = new() { $"string {x}" },
+                Guid = Guid.Parse($"CA0EA80A-322C-436D-8E23-C638A30CF8F{x % 10}"),
+                Decimals = new List<decimal> { 0.1m * x },
+                Ints = new[] { x }
+            })));
+        }
+
+        mongoContext.Add(data);
     }
 }
