@@ -1,5 +1,4 @@
-﻿using MongoDB.Driver.Linq;
-using PagedRequestBuilder.Extensions;
+﻿using PagedRequestBuilder.Extensions;
 using PagedRequestBuilder.Models;
 using System;
 using System.Linq;
