@@ -10,6 +10,7 @@ namespace PagedRequestBuilder.Common;
 
 internal class RequestPropertyMapper : IRequestPropertyMapper
 {
+    private static bool _initialized;
     private static readonly Dictionary<Type, Dictionary<string, string?>> _typesRequestKeyToPropertyMaps = new();
     public string? MapRequestNameToPropertyName<T>(string? propertyName)
     {
@@ -21,7 +22,7 @@ internal class RequestPropertyMapper : IRequestPropertyMapper
             if (_typesRequestKeyToPropertyMaps[containingType].ContainsKey(propertyName))
                 return _typesRequestKeyToPropertyMaps[containingType][propertyName];
 
-        throw new NotImplementedException(Strings.Errors.Templates.TypeNotContainsPagedRequestKey.Format(containingType.FullName, propertyName));
+        throw new ArgumentException(Strings.Errors.Templates.TypeNotContainsPagedRequestKey.Format(containingType.FullName, propertyName));
     }
 
     public string? MapNestedRequestNameToPropertyName<T>(string? propertyName, Type nested)
@@ -33,11 +34,14 @@ internal class RequestPropertyMapper : IRequestPropertyMapper
             if (_typesRequestKeyToPropertyMaps[nested].ContainsKey(propertyName))
                 return _typesRequestKeyToPropertyMaps[nested][propertyName];
 
-        throw new NotImplementedException(Strings.Errors.Templates.TypeNotContainsPagedRequestKey.Format(nested.FullName, propertyName));
+        throw new ArgumentException(Strings.Errors.Templates.TypeNotContainsPagedRequestKey.Format(nested.FullName, propertyName));
     }
 
     public static void ScanPagedRequestKeys()
     {
+        if (_initialized)
+            return;
+
         var types = AppDomain.CurrentDomain.GetAssemblies().Select(x => x.GetTypes()
             .Where(t => t.GetProperties()
                 .Any(p => p
@@ -54,6 +58,8 @@ internal class RequestPropertyMapper : IRequestPropertyMapper
 
             _typesRequestKeyToPropertyMaps.Add(type, keyToPropertyNamesMaps);
         }
+
+        _initialized = true;
     }
 }
 

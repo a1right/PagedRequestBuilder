@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PagedRequestBuilder.Tests", "PagedRequestBuilder.Tests\PagedRequestBuilder.Tests.csproj", "{742146B4-3245-4D2D-9D52-7F7EE6FCB493}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{55FA3DBD-665E-44BF-B725-86F7C6F1691E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55FA3DBD-665E-44BF-B725-86F7C6F1691E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55FA3DBD-665E-44BF-B725-86F7C6F1691E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{742146B4-3245-4D2D-9D52-7F7EE6FCB493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{742146B4-3245-4D2D-9D52-7F7EE6FCB493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{742146B4-3245-4D2D-9D52-7F7EE6FCB493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{742146B4-3245-4D2D-9D52-7F7EE6FCB493}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
