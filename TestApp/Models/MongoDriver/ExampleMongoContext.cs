@@ -1,15 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MongoDB.Driver;
+﻿using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 using PagedRequestBuilder.Builders;
 
-namespace PagedRequestBuilder.Models;
-
-public class ExampleContext : DbContext
-{
-    public DbSet<Example> Examples { get; set; }
-    public ExampleContext(DbContextOptions options) : base(options) { }
-}
+namespace TestApp.Models.MongoDriver;
 
 public class ExampleMongoContext
 {

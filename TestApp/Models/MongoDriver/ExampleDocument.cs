@@ -1,8 +1,9 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using PagedRequestBuilder.Attributes;
+using PagedRequestBuilder.Models;
 
-namespace PagedRequestBuilder.Models;
+namespace TestApp.Models.MongoDriver;
 
 public class ExampleDocument
 {

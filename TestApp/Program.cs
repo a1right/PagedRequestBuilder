@@ -1,10 +1,13 @@
 using BenchmarkDotNet.Running;
+using Elastic.Clients.Elasticsearch;
+using Elastic.Transport;
 using Microsoft.EntityFrameworkCore;
 using PagedRequestBuilder.Builders;
 using PagedRequestBuilder.Extensions;
 using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Services;
 using TestApp.Benchmarks;
+using TestApp.Models.MongoDriver;
 
 namespace PagedRequestTestApp;
 
@@ -25,9 +28,20 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        //query providers
         builder.Services.AddDbContext<ExampleContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("AppContext")));
         builder.Services.AddScoped<IExampleService, ExampleService>();
         builder.Services.AddSingleton<ExampleMongoContext>();
+
+        var settings = new ElasticsearchClientSettings(new Uri("https://localhost:9200"))
+                .CertificateFingerprint("bf08d117b8aa8e32dad4a8a715c10140bfa6740ef25c77d8d5bec962566618ea")
+                .Authentication(new BasicAuthentication("elastic", "JCkMhZ-k-fx80op6+61l"))
+                .DefaultIndex("example");
+
+        var client = new ElasticsearchClient(settings);
+
+        builder.Services.AddSingleton(client);
+
         builder.Services.AddPagedQueryBuilder();
 
         var app = builder.Build();
@@ -48,16 +62,17 @@ public class Program
         using var scope = app.Services.CreateScope();
         using var context = scope.ServiceProvider.GetRequiredService<ExampleContext>();
         var mongo = app.Services.GetService<ExampleMongoContext>();
+        var elastic = app.Services.GetService<ElasticsearchClient>();
         context.Database.EnsureDeleted();
         var created = context.Database.EnsureCreated();
         if (created)
-            Seed(context, mongo!);
+            Seed(context, mongo!, elastic!);
 
         PagedQueryBuilder.Initialize();
         app.Run();
 
     }
-    private static void Seed(ExampleContext context, ExampleMongoContext mongoContext)
+    private static void Seed(ExampleContext context, ExampleMongoContext mongoContext, ElasticsearchClient elastic)
     {
         var daysShift = 0;
         for (var i = 0; i < 5; i++)
@@ -105,5 +120,9 @@ public class Program
         }
 
         mongoContext.Add(data);
+        elastic.Indices.Delete("example");
+        elastic.Indices.Create<Example>();
+        var elasticData = context.Examples.ToList();
+        elastic.IndexMany(elasticData, "example");
     }
 }
