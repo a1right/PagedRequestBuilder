@@ -19,7 +19,7 @@ internal class PagedRequestValueParser : IPagedRequestValueParser
             return ParseArray(array, assignablePropertyType);
 
         if (node is JsonValue value)
-            return _parseStrategyProvider.ForNode(node).GetValue(value, assignablePropertyType);
+            return _parseStrategyProvider.ForNode(node).Parse(value, assignablePropertyType);
 
         throw new NotImplementedException();
     }
