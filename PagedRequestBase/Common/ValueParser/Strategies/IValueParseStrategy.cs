@@ -6,5 +6,5 @@ namespace PagedRequestBuilder.Common.ValueParser.Strategies;
 
 public interface IValueParseStrategy
 {
-    ValueParseResult GetValue(JsonValue value, Type assignablePropertyType);
+    ValueParseResult Parse(JsonValue value, Type assignablePropertyType);
 }

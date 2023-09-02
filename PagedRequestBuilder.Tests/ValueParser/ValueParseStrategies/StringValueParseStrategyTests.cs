@@ -24,7 +24,7 @@ public class StringValueParseStrategyTests
         var jsonValue = (JsonValue)node;
 
         //Act
-        var actual = _strategy.GetValue(jsonValue, typeof(string));
+        var actual = _strategy.Parse(jsonValue, typeof(string));
 
         //Assert
         Assert.Equal(value, actual.Value);
@@ -42,7 +42,7 @@ public class StringValueParseStrategyTests
         var jsonValue = (JsonValue)node;
 
         //Act
-        var actual = _strategy.GetValue(jsonValue, typeof(DateTime));
+        var actual = _strategy.Parse(jsonValue, typeof(DateTime));
         var expected = DateTime.Parse(value).ToUniversalTime();
 
         //Assert
@@ -61,7 +61,7 @@ public class StringValueParseStrategyTests
         var jsonValue = (JsonValue)node;
 
         //Act
-        var actual = _strategy.GetValue(jsonValue, typeof(Guid));
+        var actual = _strategy.Parse(jsonValue, typeof(Guid));
         var expected = Guid.Parse(value);
 
         //Assert

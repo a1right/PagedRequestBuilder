@@ -8,7 +8,7 @@ namespace PagedRequestBuilder.Common.ValueParser.Strategies;
 
 internal class StringParseStrategy : IValueParseStrategy
 {
-    public ValueParseResult GetValue(JsonValue value, Type assignablePropertyType)
+    public ValueParseResult Parse(JsonValue value, Type assignablePropertyType)
     {
         if (assignablePropertyType.IsArray)
             return ForArrayAssignType(value, assignablePropertyType);

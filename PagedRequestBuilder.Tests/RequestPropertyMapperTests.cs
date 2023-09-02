@@ -10,7 +10,7 @@ public class RequestPropertyMapperTests
     public const string NestedKey = "nested key exists";
     public const string KeyNotExists = "key not exists";
 
-    private IRequestPropertyMapper _mapper;
+    private RequestPropertyMapper _mapper;
     public RequestPropertyMapperTests()
     {
         PagedQueryBuilder.Initialize();

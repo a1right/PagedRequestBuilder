@@ -23,7 +23,7 @@ public class BoolValueRarseStrategyTests
         var typeOfValue = value.GetType();
 
         //Act
-        var actual = _strategy.GetValue(jsonValue, typeOfValue);
+        var actual = _strategy.Parse(jsonValue, typeOfValue);
 
         //Assert
         Assert.Equal(value, actual.Value);
