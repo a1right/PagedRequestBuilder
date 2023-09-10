@@ -33,6 +33,15 @@ internal class NumberParseStrategy : IValueParseStrategy
         if (assignablePropertyType == typeof(decimal))
             return ValueParseResult.New<decimal>(value);
 
+        if (assignablePropertyType == typeof(int?))
+            return ValueParseResult.New<int?>(value);
+
+        if (assignablePropertyType == typeof(double?))
+            return ValueParseResult.New<double?>(value);
+
+        if (assignablePropertyType == typeof(decimal?))
+            return ValueParseResult.New<decimal?>(value);
+
         throw new NotImplementedException();
     }
 

@@ -26,17 +26,18 @@ public class ExampleService : IExampleService
     public async Task<PagedResponse<ExampleDto>> GetPaged(GetPagedExampleRequest? request)
     {
         request ??= new();
-        var query = _context.Set<Example>();
-        var pagedQuery = _queryBuilder
-            .BuildQuery(query, request, 1, 100)
-            .Include(x => x.Inner)
-            .ThenInclude(x => x!.Nested)
+        var query = _context.Set<Example>().AsQueryable();
+        query = _queryBuilder
+            .BuildQuery(query, request);
+
+        var pagedQuery = query
+            .Paginate(request)
             .Select(x => x.Map<Example, ExampleDto>());
 
-        Console.WriteLine(query.ToQueryString());
+        Console.WriteLine(pagedQuery.ToQueryString());
 
+        var total = await query.CountAsync();
         var data = await pagedQuery.ToListAsync();
-        var total = await pagedQuery.CountAsync();
 
         return data.ToPagedResponse(request.Page, request.Size, total);
     }

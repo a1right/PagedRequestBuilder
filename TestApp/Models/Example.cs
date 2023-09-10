@@ -11,17 +11,20 @@ public class Example
     [PagedRequestKey("strings")]
     public List<string>? Strings { get; set; }
     [PagedRequestKey("date")]
-    public DateTime Date { get; set; }
+    public DateTime? Date { get; set; }
     [PagedRequestKey("enum")]
-    public ExampleEnum Enum { get; set; }
+    public ExampleEnum? Enum { get; set; }
     [PagedRequestKey("decimal")]
-    public decimal Decimal { get; set; }
+    public decimal? Decimal { get; set; }
     [PagedRequestKey("decimals")]
     public List<decimal>? Decimals { get; set; }
+    [PagedRequestKey("int")]
+    public int? Int { get; set; }
+
     [PagedRequestKey("ints")]
     public int[]? Ints { get; set; }
     [PagedRequestKey("guid")]
-    public Guid Guid { get; set; }
+    public Guid? Guid { get; set; }
     [PagedRequestKey("inner")]
     public InnerExample? Inner { get; set; }
 }

@@ -45,20 +45,21 @@ public class Program
 
         app.MapControllers();
 
-        using var scope = app.Services.CreateScope();
-        using var context = scope.ServiceProvider.GetRequiredService<ExampleContext>();
-        var mongo = app.Services.GetService<ExampleMongoContext>();
-        context.Database.EnsureDeleted();
-        var created = context.Database.EnsureCreated();
-        if (created)
-            Seed(context, mongo!);
+        SeedMongo(app.Services);
+        SeedPostgres(app.Services);
 
         PagedQueryBuilder.Initialize();
         app.Run();
 
     }
-    private static void Seed(ExampleContext context, ExampleMongoContext mongoContext)
+    private static void SeedPostgres(IServiceProvider provider)
     {
+        using var scope = provider.CreateScope();
+        using var context = scope.ServiceProvider.GetRequiredService<ExampleContext>();
+
+        context.Database.EnsureDeleted();
+        var created = context.Database.EnsureCreated();
+
         var daysShift = 0;
         for (var i = 0; i < 5; i++)
         {
@@ -71,6 +72,7 @@ public class Program
                 Strings = new() { $"string {x}" },
                 Guid = Guid.Parse($"CA0EA80A-322C-436D-8E23-C638A30CF8F{x % 10}"),
                 Decimals = new List<decimal> { 0.1m * x },
+                Int = x,
                 Ints = new[] { x },
                 Inner = new()
                 {
@@ -86,8 +88,12 @@ public class Program
         }
 
         context.SaveChanges();
+    }
 
-        daysShift = 0;
+    private static void SeedMongo(IServiceProvider provider)
+    {
+        var mongoContext = provider.GetService<ExampleMongoContext>();
+        var daysShift = 0;
         var data = new List<ExampleDocument>();
         for (var i = 0; i < 5; i++)
         {
@@ -104,6 +110,6 @@ public class Program
             })));
         }
 
-        mongoContext.Add(data);
+        mongoContext!.Add(data);
     }
 }

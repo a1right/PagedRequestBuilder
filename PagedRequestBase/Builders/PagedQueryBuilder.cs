@@ -1,6 +1,5 @@
 ﻿using PagedRequestBuilder.Extensions;
 using PagedRequestBuilder.Models;
-using System;
 using System.Linq;
 
 namespace PagedRequestBuilder.Builders;
@@ -16,22 +15,17 @@ internal class PagedQueryBuilder<T> : IPagedQueryBuilder<T>
         _sorterBuilder = sorterBuilder;
     }
 
-    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request) where TQueryable : IQueryable<T> => (TQueryable)BuildQueryBase(query, request);
+    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request) where TQueryable : IQueryable<T>
+    {
+        var result = query
+            .Where(_filterBuilder.BuildFilters(request))
+            .OrderBy(_sorterBuilder.BuildSorters(request));
 
-    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request, Func<IQueryable<T>, IQueryable<T>> paginate) where TQueryable : IQueryable<T> =>
-        (TQueryable)paginate(BuildQueryBase(query, request));
-
-    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request, int? page, int? size) where TQueryable : IQueryable<T> =>
-        (TQueryable)BuildQueryBase(query, request)
-        .Paginate(size, page);
-    private IQueryable<T> BuildQueryBase(IQueryable<T> query, PagedRequestBase request) => query
-        .Where(_filterBuilder.BuildFilters(request))
-        .OrderBy(_sorterBuilder.BuildSorters(request));
+        return (TQueryable)result;
+    }
 }
 
 public interface IPagedQueryBuilder<T>
 {
     TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request) where TQueryable : IQueryable<T>;
-    TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request, Func<IQueryable<T>, IQueryable<T>> paginate) where TQueryable : IQueryable<T>;
-    TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request, int? page, int? size) where TQueryable : IQueryable<T>;
 }

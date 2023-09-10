@@ -29,11 +29,8 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
         _queryFilterCache = queryFilterCache;
         _methodCallExpressionBuilder = methodCallExpressionBuilder;
     }
-    public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase? request)
+    public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase request)
     {
-        if (request is not { Filters: { Count: > 0 } })
-            yield break;
-
         foreach (var filter in request.Filters)
         {
             if (filter is null)
@@ -54,6 +51,37 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
                 yield return queryFilter;
                 _queryFilterCache.Set(filter, queryFilter);
             }
+        }
+
+        foreach (var complexFilter in request.ComplexFilters)
+        {
+            QueryFilter<T>? aggregate = null;
+            foreach (var filter in complexFilter)
+            {
+                if (filter is null)
+                    continue;
+
+                var cached = _queryFilterCache.Get(filter);
+                if (cached is not null)
+                {
+                    aggregate = aggregate is null
+                        ? (QueryFilter<T>)cached
+                        : aggregate | (QueryFilter<T>)cached;
+                    continue;
+                }
+
+                var predicate = GetPredicate(filter);
+
+                if (predicate != null)
+                {
+                    var queryFilter = new QueryFilter<T>(predicate);
+                    aggregate |= queryFilter;
+                    _queryFilterCache.Set(filter, queryFilter);
+                }
+            }
+
+            if (aggregate is not null)
+                yield return aggregate;
         }
     }
 
@@ -106,5 +134,5 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
 
 public interface IFilterBuilder<T> where T : class
 {
-    IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase? request);
+    IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase request);
 }
