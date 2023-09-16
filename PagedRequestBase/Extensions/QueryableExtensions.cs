@@ -1,4 +1,4 @@
-﻿using PagedRequestBuilder.Models;
+﻿using PagedRequestBuilder.Infrastructure.AsyncSequence;
 using PagedRequestBuilder.Models.Filter;
 using PagedRequestBuilder.Models.Sorter;
 using System.Collections.Generic;
@@ -56,34 +56,13 @@ internal static class QueryableExtensions
 
     public static IQueryable<T> Paginate<T>(this IQueryable<T> query, int size, int page)
     {
-        if (size <= 0 || page < 1)
-            return Enumerable.Empty<T>().AsQueryable();
+        if (size < 1 || page < 1)
+            return Enumerable.Empty<T>().AsAsyncQueryable();
 
         return query
             .Skip((size * (page - 1)))
             .Take(size);
     }
-}
-
-public static class QueryableExtensionsPublic
-{
-    public static IQueryable<T> Paginate<T>(this IQueryable<T> query, int size, int page)
-    {
-        if (size <= 0 || page < 1)
-            return Enumerable.Empty<T>().AsQueryable();
-
-        return query
-            .Skip((size * (page - 1)))
-            .Take(size);
-    }
-
-    public static IQueryable<T> Paginate<T>(this IQueryable<T> query, PagedRequestBase request)
-    {
-        if (request.Size <= 0 || request.Page < 1)
-            return Enumerable.Empty<T>().AsQueryable();
-
-        return query
-            .Skip((request.Size * (request.Page - 1)))
-            .Take(request.Size);
-    }
+    public static IQueryable<T> AsAsyncQueryable<T>(this IEnumerable<T> source) =>
+        new AsyncQueryable<T>(source.AsQueryable());
 }

@@ -21,11 +21,4 @@ public class ExamplesController : ControllerBase
         var response = await _exampleService.GetPaged(request);
         return Ok(response);
     }
-
-    [HttpPost("mongo")]
-    public async Task<IActionResult> GetPagedMongo([FromBody] GetPagedExampleDocument? request)
-    {
-        var response = await _exampleService.GetPaged(request);
-        return Ok(response);
-    }
 }

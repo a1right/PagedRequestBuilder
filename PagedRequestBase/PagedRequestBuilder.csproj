@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <WarningAsErrors>CS8601,CS8602,CS8618</WarningAsErrors>
     <PackageId>PagedRequestBuilder</PackageId>
-    <Version>1.0.0-rc1</Version>
+    <Version>1.0.0-rc4</Version>
     <Authors>a1Right</Authors>
     <PackageDescription>Generic pagination with builtin filters and sorters</PackageDescription>
     <RepositoryUrl>https://github.com/a1right/ExpressionFilters</RepositoryUrl>

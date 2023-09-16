@@ -27,7 +27,6 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<ExampleContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("AppContext")));
         builder.Services.AddScoped<IExampleService, ExampleService>();
-        builder.Services.AddSingleton<ExampleMongoContext>();
         builder.Services.AddPagedQueryBuilder();
 
         var app = builder.Build();
@@ -45,7 +44,6 @@ public class Program
 
         app.MapControllers();
 
-        SeedMongo(app.Services);
         SeedPostgres(app.Services);
 
         PagedQueryBuilder.Initialize();
@@ -88,28 +86,5 @@ public class Program
         }
 
         context.SaveChanges();
-    }
-
-    private static void SeedMongo(IServiceProvider provider)
-    {
-        var mongoContext = provider.GetService<ExampleMongoContext>();
-        var daysShift = 0;
-        var data = new List<ExampleDocument>();
-        for (var i = 0; i < 5; i++)
-        {
-            data.AddRange((Enumerable.Range(1, 10).Select(x => new ExampleDocument()
-            {
-                Date = DateTime.UtcNow.AddDays(-daysShift++),
-                Decimal = (decimal)(0.1 * x),
-                Enum = (ExampleEnum)x,
-                String = $"string {x}",
-                Strings = new() { $"string {x}" },
-                Guid = Guid.Parse($"CA0EA80A-322C-436D-8E23-C638A30CF8F{x % 10}"),
-                Decimals = new List<decimal> { 0.1m * x },
-                Ints = new[] { x }
-            })));
-        }
-
-        mongoContext!.Add(data);
     }
 }

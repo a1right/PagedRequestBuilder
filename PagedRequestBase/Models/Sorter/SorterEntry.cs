@@ -1,12 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace PagedRequestBuilder.Models.Sorter;
 
 public class SorterEntry
 {
-    public string? Property { get; set; }
+    public string Property { get; set; } = string.Empty;
     public bool? Descending { get; set; }
-    public string[]? Nested { get; set; }
+    public List<string> Nested { get; set; } = new();
 
     public override bool Equals(object? obj)
     {

@@ -11,14 +11,12 @@ namespace PagedRequestBuilder.Services;
 public class ExampleService : IExampleService
 {
     private readonly ExampleContext _context;
-    private readonly ExampleMongoContext _exampleMongoContext;
     private readonly IPagedQueryBuilder<Example> _queryBuilder;
     private readonly IPagedQueryBuilder<ExampleDocument> _queryMongoBuilder;
 
-    public ExampleService(ExampleContext context, ExampleMongoContext exampleMongoContext, IPagedQueryBuilder<Example> queryBuilder, IPagedQueryBuilder<ExampleDocument> queryMongoBuilder)
+    public ExampleService(ExampleContext context, IPagedQueryBuilder<Example> queryBuilder, IPagedQueryBuilder<ExampleDocument> queryMongoBuilder)
     {
         _context = context;
-        _exampleMongoContext = exampleMongoContext;
         _queryBuilder = queryBuilder;
         _queryMongoBuilder = queryMongoBuilder;
     }
@@ -41,21 +39,9 @@ public class ExampleService : IExampleService
 
         return data.ToPagedResponse(request.Page, request.Size, total);
     }
-
-    public async Task<PagedResponse<ExampleDocument>> GetPaged(GetPagedExampleDocument? request)
-    {
-        request ??= new();
-
-        var query = _exampleMongoContext.Examples;
-        query = _queryMongoBuilder.BuildQuery(query, request);
-        var data = await (await query.ToCursorAsync()).ToListAsync();
-        var total = await query.CountAsync();
-        return data.ToPagedResponse(request.Page, request.Size, total);
-    }
 }
 
 public interface IExampleService
 {
     Task<PagedResponse<ExampleDto>> GetPaged(GetPagedExampleRequest? request);
-    Task<PagedResponse<ExampleDocument>> GetPaged(GetPagedExampleDocument? request);
 }
