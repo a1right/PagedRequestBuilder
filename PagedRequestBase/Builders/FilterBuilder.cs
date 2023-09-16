@@ -7,6 +7,7 @@ using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Models.Filter;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace PagedRequestBuilder.Builders;
@@ -31,7 +32,15 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
     }
     public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase request)
     {
-        foreach (var filter in request.Filters)
+        var simpleFilters = BuildSimpleFilters(request.Filters);
+        var complexFilters = BuildComplexFilters(request.ComplexFilters);
+
+        return simpleFilters.Concat(complexFilters);
+    }
+
+    private IEnumerable<QueryFilter<T>> BuildSimpleFilters(IEnumerable<FilterEntry> entries)
+    {
+        foreach (var filter in entries)
         {
             if (filter is null)
                 continue;
@@ -39,7 +48,7 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
             var cached = _queryFilterCache.Get(filter);
             if (cached is not null)
             {
-                yield return cached;
+                yield return (QueryFilter<T>)cached;
                 continue;
             }
 
@@ -52,33 +61,16 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
                 _queryFilterCache.Set(filter, queryFilter);
             }
         }
+    }
 
-        foreach (var complexFilter in request.ComplexFilters)
+    private IEnumerable<QueryFilter<T>> BuildComplexFilters(IEnumerable<IEnumerable<FilterEntry>> entries)
+    {
+        foreach (var complexFilter in entries)
         {
             QueryFilter<T>? aggregate = null;
-            foreach (var filter in complexFilter)
-            {
-                if (filter is null)
-                    continue;
 
-                var cached = _queryFilterCache.Get(filter);
-                if (cached is not null)
-                {
-                    aggregate = aggregate is null
-                        ? (QueryFilter<T>)cached
-                        : aggregate | (QueryFilter<T>)cached;
-                    continue;
-                }
-
-                var predicate = GetPredicate(filter);
-
-                if (predicate != null)
-                {
-                    var queryFilter = new QueryFilter<T>(predicate);
-                    aggregate |= queryFilter;
-                    _queryFilterCache.Set(filter, queryFilter);
-                }
-            }
+            foreach (var filter in BuildSimpleFilters(complexFilter))
+                aggregate |= filter;
 
             if (aggregate is not null)
                 yield return aggregate;

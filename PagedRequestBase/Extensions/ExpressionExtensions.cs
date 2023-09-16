@@ -9,9 +9,9 @@ internal static class ExpressionExtensions
         Expression<Func<T, bool>> rightExpression) =>
         Combine(leftExpression, rightExpression, Expression.AndAlso);
 
-    public static Expression<Func<T, bool>> Or<T>(this Expression<Func<T, bool>> leftExpression,
+    public static Expression<Func<T, bool>> OrElse<T>(this Expression<Func<T, bool>> leftExpression,
         Expression<Func<T, bool>> rightExpression) =>
-        Combine(leftExpression, rightExpression, Expression.Or);
+        Combine(leftExpression, rightExpression, Expression.OrElse);
 
     public static Expression<Func<T, bool>> Combine<T>(Expression<Func<T, bool>> leftExpression, Expression<Func<T, bool>> rightExpression, Func<Expression, Expression, BinaryExpression> combineOperator)
     {

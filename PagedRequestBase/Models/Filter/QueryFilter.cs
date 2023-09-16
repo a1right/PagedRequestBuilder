@@ -23,6 +23,17 @@ internal class QueryFilter<T> : IQueryFilter<T>
         if (left is null)
             return right;
 
-        return new QueryFilter<T>(left.Filter.Or(right.Filter));
+        return new QueryFilter<T>(left.Filter.OrElse(right.Filter));
+    }
+
+    public static QueryFilter<T>? operator &(QueryFilter<T>? left, QueryFilter<T>? right)
+    {
+        if (right is null)
+            return left;
+
+        if (left is null)
+            return right;
+
+        return new QueryFilter<T>(left.Filter.AndAlso(right.Filter));
     }
 }
