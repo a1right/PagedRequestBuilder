@@ -11,11 +11,11 @@ namespace PagedRequestBuilder.Common;
 internal class RequestPropertyMapper : IRequestPropertyMapper
 {
     private static bool _initialized;
-    private static readonly Dictionary<Type, Dictionary<string, string?>> _typesRequestKeyToPropertyMaps = new();
-    public string? MapRequestNameToPropertyName<T>(string? propertyName)
+    private static readonly Dictionary<Type, Dictionary<string, string>> _typesRequestKeyToPropertyMaps = new();
+    public string MapRequestNameToPropertyName<T>(string propertyName)
     {
         if (string.IsNullOrEmpty(propertyName))
-            return null;
+            throw new ArgumentNullException(nameof(propertyName));
 
         var containingType = typeof(T);
         if (_typesRequestKeyToPropertyMaps.ContainsKey(containingType))
@@ -25,10 +25,10 @@ internal class RequestPropertyMapper : IRequestPropertyMapper
         throw new ArgumentException(Strings.Errors.Templates.TypeNotContainsPagedRequestKey.Format(containingType.FullName, propertyName));
     }
 
-    public string? MapNestedRequestNameToPropertyName<T>(string? propertyName, Type nested)
+    public string MapRequestNameToPropertyName(string propertyName, Type nested)
     {
         if (string.IsNullOrEmpty(propertyName))
-            return null;
+            throw new ArgumentNullException(nameof(propertyName));
 
         if (_typesRequestKeyToPropertyMaps.ContainsKey(nested))
             if (_typesRequestKeyToPropertyMaps[nested].ContainsKey(propertyName))
@@ -54,7 +54,7 @@ internal class RequestPropertyMapper : IRequestPropertyMapper
             var keyToPropertyNamesMaps = type.GetProperties()
                 .Where(p => p.IsDefined(typeof(PagedRequestKeyAttribute)))
                 .Select(x => x.GetCustomAttribute<PagedRequestKeyAttribute>())
-                .ToDictionary(key => key.RequestKey, value => value.TargetProperty);
+                .ToDictionary(key => key.RequestKey, value => value.TargetProperty!);
 
             _typesRequestKeyToPropertyMaps.Add(type, keyToPropertyNamesMaps);
         }
@@ -65,6 +65,6 @@ internal class RequestPropertyMapper : IRequestPropertyMapper
 
 public interface IRequestPropertyMapper
 {
-    string? MapRequestNameToPropertyName<T>(string? propertyName);
-    string? MapNestedRequestNameToPropertyName<T>(string? propertyName, Type nested);
+    string MapRequestNameToPropertyName<T>(string propertyName);
+    string MapRequestNameToPropertyName(string propertyName, Type nested);
 }

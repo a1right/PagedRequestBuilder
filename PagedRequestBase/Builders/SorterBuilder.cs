@@ -59,7 +59,7 @@ public class SorterBuilder<T> : ISorterBuilder<T> where T : class
             {
                 foreach (var nested in entry.Nested)
                 {
-                    typePropertyName = _propertyMapper.MapNestedRequestNameToPropertyName<T>(nested, propertyType);
+                    typePropertyName = _propertyMapper.MapRequestNameToPropertyName(nested, propertyType);
                     propertySelector = Expression.PropertyOrField(propertySelector, typePropertyName);
                     propertyType = propertyType.GetProperty(typePropertyName).PropertyType;
                 }

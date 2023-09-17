@@ -82,21 +82,11 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
         try
         {
             var parameter = Expression.Parameter(typeof(T), "x");
-            var typePropertyName = _propertyMapper.MapRequestNameToPropertyName<T>(entry.Property);
-            var propertySelector = Expression.PropertyOrField(parameter, typePropertyName);
-            var assignablePropertyType = typeof(T).GetProperty(typePropertyName).PropertyType;
-
-            if (entry.Nested is not null)
-            {
-                foreach (var nested in entry.Nested)
-                {
-                    typePropertyName = _propertyMapper.MapNestedRequestNameToPropertyName<T>(nested, assignablePropertyType);
-                    propertySelector = Expression.PropertyOrField(propertySelector, typePropertyName);
-                    assignablePropertyType = assignablePropertyType.GetProperty(typePropertyName).PropertyType;
-                }
-            }
+            var propertySelector = GetPropertySelector(entry.Property, parameter);
+            var assignablePropertyType = propertySelector.Type;
 
             var providedValue = _valueParser.GetValue(entry.Value, assignablePropertyType);
+
             var constant = Expression.Constant(providedValue, typeof(ValueParseResult));
             var constantClojure = Expression.Property(constant, nameof(ValueParseResult.Value));
             var converted = Expression.Convert(constantClojure, providedValue.ValueType);
@@ -105,8 +95,30 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
         }
         catch (Exception ex)
         {
+            if (PaginationSetting.ThrowExceptions)
+                throw;
+
             return null;
         }
+    }
+
+    private MemberExpression GetPropertySelector(string propertyKeys, Expression parameter)
+    {
+        var keys = propertyKeys.Split('.');
+        var propertySelector = parameter;
+        var assignablePropertyType = typeof(T);
+
+        foreach (var property in keys)
+        {
+            var typePropertyName = _propertyMapper.MapRequestNameToPropertyName(property, assignablePropertyType);
+            propertySelector = Expression.PropertyOrField(propertySelector, typePropertyName);
+            assignablePropertyType = propertySelector.Type;
+        }
+
+        if (propertySelector is null)
+            throw new ArgumentNullException(nameof(propertySelector));
+
+        return (MemberExpression)propertySelector;
     }
 
     private Expression GetOperationExpression(Expression left, Expression right, string? operation, Type assignablePropertyType) => operation switch

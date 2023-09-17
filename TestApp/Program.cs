@@ -27,7 +27,10 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddDbContext<ExampleContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("AppContext")));
         builder.Services.AddScoped<IExampleService, ExampleService>();
-        builder.Services.AddPagedQueryBuilder();
+        builder.Services.AddPagedQueryBuilder(config =>
+        {
+            config.ThrowExceptions = true;
+        });
 
         var app = builder.Build();
 

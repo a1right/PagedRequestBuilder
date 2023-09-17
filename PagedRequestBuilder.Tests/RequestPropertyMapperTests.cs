@@ -33,7 +33,7 @@ public class RequestPropertyMapperTests
     [Fact]
     public void MapNestedRequestNameToPropertyName_NestedPropertyKeyExists_ReturnPropertyName()
     {
-        var actual = _mapper.MapNestedRequestNameToPropertyName<PropertyMapperTest>(Key, typeof(PropertyMapperNestedTest));
+        var actual = _mapper.MapRequestNameToPropertyName(Key, typeof(PropertyMapperNestedTest));
         var expected = nameof(PropertyMapperNestedTest.Id);
         Assert.Equal(expected, actual);
     }
@@ -41,6 +41,6 @@ public class RequestPropertyMapperTests
     [Fact]
     public void MapNestedRequestNameToPropertyName_NestedPropertyKeyNotExists_ThrowsArgumentException()
     {
-        Assert.Throws<ArgumentException>(() => _mapper.MapNestedRequestNameToPropertyName<PropertyMapperTest>(KeyNotExists, typeof(PropertyMapperNestedTest)));
+        Assert.Throws<ArgumentException>(() => _mapper.MapRequestNameToPropertyName(KeyNotExists, typeof(PropertyMapperNestedTest)));
     }
 }

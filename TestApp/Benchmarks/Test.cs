@@ -44,7 +44,7 @@ public class Test
                 new () { Property = "decimal", Value = JsonNode.Parse(JsonSerializer.Serialize(0.2m)), Operation = ">"},
                 new () { Property = "decimal", Value = JsonNode.Parse(JsonSerializer.Serialize(0.8m)), Operation = "<"},
                 new () { Property = "guid", Value = JsonNode.Parse(JsonSerializer.Serialize("CA0EA80A-322C-436D-8E23-C638A30CF8F6")), Operation = "="},
-                new () { Property = "inner", Value = JsonNode.Parse(JsonSerializer.Serialize(" double inner string 5")), Operation = "contains", Nested = new []{ "doubleinner", "string"} },
+                new () { Property = "inner.doubleinner.string", Value = JsonNode.Parse(JsonSerializer.Serialize(" double inner string 5")), Operation = "contains"}
             },
             Page = 1,
             Size = 10,

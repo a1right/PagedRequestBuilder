@@ -33,6 +33,7 @@ public static class ServiceCollectionExtensions
 
         PaginationSetting.DefaultPageSize = options.DefaultPageSize < 1 ? Constants.DefaultPaginationSettings.DefaultPageSize : options.DefaultPageSize;
         PaginationSetting.DefaultPageNumber = options.DefaultPageNumber < 1 ? Constants.DefaultPaginationSettings.DefaultPageNumber : options.DefaultPageNumber;
+        PaginationSetting.ThrowExceptions = options.ThrowExceptions;
     }
 
     private static IServiceCollection AddMethodInfo(this IServiceCollection services)
