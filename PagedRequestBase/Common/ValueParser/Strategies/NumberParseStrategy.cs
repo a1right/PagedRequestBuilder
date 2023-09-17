@@ -33,6 +33,9 @@ internal class NumberParseStrategy : IValueParseStrategy
         if (assignablePropertyType == typeof(decimal))
             return ValueParseResult.New<decimal>(value);
 
+        if (Nullable.GetUnderlyingType(assignablePropertyType).IsEnum)
+            return ValueParseResult.New(Enum.ToObject(Nullable.GetUnderlyingType(assignablePropertyType), value.GetValue<byte>()), Nullable.GetUnderlyingType(assignablePropertyType));
+
         if (assignablePropertyType == typeof(int?))
             return ValueParseResult.New<int?>(value);
 

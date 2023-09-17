@@ -6,7 +6,7 @@ namespace PagedRequestBuilder.Models.Sorter;
 public class SorterEntry
 {
     public string Property { get; set; } = string.Empty;
-    public bool? Descending { get; set; }
+    public bool Descending { get; set; }
     public List<string> Nested { get; set; } = new();
 
     public override bool Equals(object? obj)
@@ -38,8 +38,7 @@ public class SorterEntry
             if (Property is not null)
                 hashCode = Property.GetHashCode();
 
-            if (Descending is not null)
-                hashCode += Descending.GetHashCode();
+            hashCode += Descending.GetHashCode();
 
             return hashCode == 0 ? base.GetHashCode() : hashCode;
         }

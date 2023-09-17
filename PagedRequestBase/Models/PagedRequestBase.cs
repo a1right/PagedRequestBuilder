@@ -13,6 +13,7 @@ public abstract class PagedRequestBase
     public List<FilterEntry> Filters { get; set; } = new();
     public List<List<FilterEntry>> ComplexFilters { get; set; } = new();
     public List<SorterEntry> Sorters { get; set; } = new();
+    public List<string> SortKeys { get; set; } = new();
     public int Page
     {
         get => _page ?? PaginationSetting.DefaultPageNumber;
