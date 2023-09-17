@@ -32,9 +32,6 @@ public class ExampleService : IExampleService
             .Paginate(request)
             .Select(x => x.Map<Example, ExampleDto>());
 
-        Console.WriteLine(query.ToQueryString());
-        Console.WriteLine(pagedQuery.ToQueryString());
-
         var total = await query.CountAsync();
         var data = await pagedQuery.ToListAsync();
 

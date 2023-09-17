@@ -1,5 +1,5 @@
 ﻿using PagedRequestBuilder.Common.ValueParser.Strategies;
-using System;
+using PagedRequestBuilder.Infrastructure.Exceptions;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -34,7 +34,7 @@ internal class ValueParseStrategyProvider : IValueParseStrategyProvider
         if (value.ValueKind is JsonValueKind.True or JsonValueKind.False)
             return _boolParseStrategy;
 
-        throw new NotImplementedException();
+        throw new ValueKindException(value.ValueKind);
     }
 }
 

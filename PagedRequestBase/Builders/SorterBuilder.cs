@@ -20,11 +20,8 @@ public class SorterBuilder<T> : ISorterBuilder<T> where T : class
         _querySorterCache = querySorterCache;
     }
 
-    public IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase? request)
+    public IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase request)
     {
-        if (request is not { Sorters: { Count: > 0 } } and not { SortKeys: { Count: > 0 } })
-            return Enumerable.Empty<IQuerySorter<T>>();
-
         var sortersByEntry = BuildSortersFromEntries(request.Sorters);
         var sortersByKeys = BuildSortersFromKeys(request.SortKeys);
 
@@ -80,21 +77,11 @@ public class SorterBuilder<T> : ISorterBuilder<T> where T : class
 
     private Expression<Func<T, object>>? GetKeySelector(SorterEntry entry)
     {
-        try
-        {
-            var parameter = Expression.Parameter(typeof(T), "x");
-            var propertySelector = GetPropertySelector(entry.Property, parameter);
+        var parameter = Expression.Parameter(typeof(T), "x");
+        var propertySelector = GetPropertySelector(entry.Property, parameter);
 
-            var converted = Expression.Convert(propertySelector, typeof(object));
-            return Expression.Lambda<Func<T, object>>(converted, parameter);
-        }
-        catch (Exception ex)
-        {
-            if (PaginationSetting.ThrowExceptions)
-                throw;
-
-            return null;
-        }
+        var converted = Expression.Convert(propertySelector, typeof(object));
+        return Expression.Lambda<Func<T, object>>(converted, parameter);
     }
 
     private MemberExpression GetPropertySelector(string propertyKeys, Expression parameter)
@@ -109,9 +96,6 @@ public class SorterBuilder<T> : ISorterBuilder<T> where T : class
             propertySelector = Expression.PropertyOrField(propertySelector, typePropertyName);
             assignablePropertyType = propertySelector.Type;
         }
-
-        if (propertySelector is null)
-            throw new ArgumentNullException(nameof(propertySelector));
 
         return (MemberExpression)propertySelector;
     }

@@ -1,6 +1,7 @@
 ﻿using PagedRequestBuilder.Attributes;
 using PagedRequestBuilder.Constants;
 using PagedRequestBuilder.Extensions;
+using PagedRequestBuilder.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ internal class RequestPropertyMapper : IRequestPropertyMapper
             if (_typesRequestKeyToPropertyMaps[containingType].ContainsKey(propertyName))
                 return _typesRequestKeyToPropertyMaps[containingType][propertyName];
 
-        throw new ArgumentException(Strings.Errors.Templates.TypeNotContainsPagedRequestKey.Format(containingType.FullName, propertyName));
+        throw new PropertyMapMissingException(Strings.Errors.Templates.TypeNotContainsPagedRequestKey.Format(containingType.FullName, propertyName));
     }
 
     public string MapRequestNameToPropertyName(string propertyName, Type nested)
@@ -34,7 +35,7 @@ internal class RequestPropertyMapper : IRequestPropertyMapper
             if (_typesRequestKeyToPropertyMaps[nested].ContainsKey(propertyName))
                 return _typesRequestKeyToPropertyMaps[nested][propertyName];
 
-        throw new ArgumentException(Strings.Errors.Templates.TypeNotContainsPagedRequestKey.Format(nested.FullName, propertyName));
+        throw new PropertyMapMissingException(Strings.Errors.Templates.TypeNotContainsPagedRequestKey.Format(nested.FullName, propertyName));
     }
 
     public static void ScanPagedRequestKeys()

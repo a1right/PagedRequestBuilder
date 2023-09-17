@@ -1,4 +1,5 @@
 ﻿using PagedRequestBuilder.Common.ValueParser.Models;
+using PagedRequestBuilder.Infrastructure.Exceptions;
 using System;
 using System.Collections;
 using System.Linq;
@@ -32,7 +33,7 @@ internal class StringParseStrategy : IValueParseStrategy
         if (assignablePropertyType == typeof(string))
             return ValueParseResult.New(typedValue);
 
-        throw new NotImplementedException();
+        throw new ValueFormatException(value, assignablePropertyType);
     }
 
     private ValueParseResult ForArrayAssignType(JsonValue value, Type assignablePropertyType)

@@ -1,4 +1,5 @@
 ﻿using PagedRequestBuilder.Common.ValueParser.Models;
+using PagedRequestBuilder.Infrastructure.Exceptions;
 using System;
 using System.Linq;
 using System.Text.Json.Nodes;
@@ -21,7 +22,7 @@ internal class PagedRequestValueParser : IPagedRequestValueParser
         if (node is JsonValue value)
             return _parseStrategyProvider.ForNode(node).Parse(value, assignablePropertyType);
 
-        throw new NotImplementedException();
+        throw new ValueFormatException(node, assignablePropertyType);
     }
 
     private ValueParseResult ParseArray(JsonArray node, Type assignablePropertyType)

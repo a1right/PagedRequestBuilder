@@ -18,7 +18,14 @@ public class ExamplesController : ControllerBase
     [HttpPost("relational")]
     public async Task<IActionResult> GetPagedRelational([FromBody] GetPagedExampleRequest? request)
     {
-        var response = await _exampleService.GetPaged(request);
-        return Ok(response);
+        try
+        {
+            var response = await _exampleService.GetPaged(request);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using PagedRequestBuilder.Common.ValueParser.Models;
+using PagedRequestBuilder.Infrastructure.Exceptions;
 using System;
 using System.Collections;
 using System.Linq;
@@ -45,7 +46,7 @@ internal class NumberParseStrategy : IValueParseStrategy
         if (assignablePropertyType == typeof(decimal?))
             return ValueParseResult.New<decimal?>(value);
 
-        throw new NotImplementedException();
+        throw new ValueFormatException(value, assignablePropertyType);
     }
 
     public ValueParseResult ForArrayAssignType(JsonValue value, Type assignablePropertyType)

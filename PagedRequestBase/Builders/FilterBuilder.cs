@@ -3,6 +3,7 @@ using PagedRequestBuilder.Common;
 using PagedRequestBuilder.Common.ValueParser;
 using PagedRequestBuilder.Common.ValueParser.Models;
 using PagedRequestBuilder.Constants;
+using PagedRequestBuilder.Infrastructure.Exceptions;
 using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Models.Filter;
 using System;
@@ -89,23 +90,29 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
 
             var constant = Expression.Constant(providedValue, typeof(ValueParseResult));
             var constantClojure = Expression.Property(constant, nameof(ValueParseResult.Value));
-            var converted = Expression.Convert(constantClojure, assignablePropertyType);
+            var converted = Expression.Convert(constantClojure, providedValue.ValueType);
             if (assignablePropertyType.IsEnum || Nullable.GetUnderlyingType(assignablePropertyType).IsEnum)
             {
-                converted = Expression.Convert(converted, typeof(int));
-                propertySelector = Expression.Convert(propertySelector, typeof(int));
+                HandleEnum(ref propertySelector, ref converted, entry.Operation);
             }
 
             var newExpression = GetOperationExpression(propertySelector, converted, entry.Operation, assignablePropertyType);
             return Expression.Lambda<Func<T, bool>>(newExpression, parameter);
         }
-        catch (Exception ex)
+        catch (PagedRequestBuilderException ex) when (ex is OperationNotImplementedException operationException)
         {
-            if (PaginationSetting.ThrowExceptions)
-                throw;
-
-            return null;
+            throw new OperationNotImplementedException($"Operation '{entry.Operation}' is not supported for property '{entry.Property}' or provided value '{entry.Value}' is invalid");
         }
+    }
+
+    private void HandleEnum(ref Expression propertySelector, ref UnaryExpression convertedValue, string operation)
+    {
+        if (operation is Strings.RequestOperations.In or Strings.RequestOperations.Contains)
+            return;
+
+        convertedValue = Expression.Convert(convertedValue, typeof(int));
+        propertySelector = Expression.Convert(propertySelector, typeof(int));
+
     }
 
     private MemberExpression GetPropertySelector(string propertyKeys, Expression parameter)
@@ -121,9 +128,6 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
             assignablePropertyType = propertySelector.Type;
         }
 
-        if (propertySelector is null)
-            throw new ArgumentNullException(nameof(propertySelector));
-
         return (MemberExpression)propertySelector;
     }
 
@@ -138,7 +142,7 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
         Strings.RequestOperations.Contains => _methodCallExpressionBuilder.Build(Strings.MethodInfoNames.Contains, left, right, assignablePropertyType),
         Strings.RequestOperations.In => _methodCallExpressionBuilder.Build(Strings.MethodInfoNames.Contains, right, left, right.Type),
 
-        _ => throw new NotImplementedException()
+        _ => throw new OperationNotImplementedException()
     };
 }
 
