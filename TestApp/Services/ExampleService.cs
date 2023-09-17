@@ -39,21 +39,6 @@ public class ExampleService : IExampleService
         var data = await pagedQuery.ToListAsync();
 
         return data.ToPagedResponse(request.Page, request.Size, total);
-
-        //request ??= new();
-        //var query = _context.Set<Example>().Where(x => x.Enum <= ExampleEnum.ExampleTwo);
-
-        //var pagedQuery = query
-        //    .Paginate(request)
-        //    .Select(x => x.Map<Example, ExampleDto>());
-
-        //Console.WriteLine(query.ToQueryString());
-        //Console.WriteLine(pagedQuery.ToQueryString());
-
-        //var total = await query.CountAsync();
-        //var data = await pagedQuery.ToListAsync();
-
-        //return data.ToPagedResponse(request.Page, request.Size, total);
     }
 }
 

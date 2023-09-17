@@ -82,14 +82,20 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
         try
         {
             var parameter = Expression.Parameter(typeof(T), "x");
-            var propertySelector = GetPropertySelector(entry.Property, parameter);
+            Expression propertySelector = GetPropertySelector(entry.Property, parameter);
             var assignablePropertyType = propertySelector.Type;
 
             var providedValue = _valueParser.GetValue(entry.Value, assignablePropertyType);
 
             var constant = Expression.Constant(providedValue, typeof(ValueParseResult));
             var constantClojure = Expression.Property(constant, nameof(ValueParseResult.Value));
-            var converted = Expression.Convert(constantClojure, providedValue.ValueType);
+            var converted = Expression.Convert(constantClojure, assignablePropertyType);
+            if (assignablePropertyType.IsEnum || Nullable.GetUnderlyingType(assignablePropertyType).IsEnum)
+            {
+                converted = Expression.Convert(converted, typeof(int));
+                propertySelector = Expression.Convert(propertySelector, typeof(int));
+            }
+
             var newExpression = GetOperationExpression(propertySelector, converted, entry.Operation, assignablePropertyType);
             return Expression.Lambda<Func<T, bool>>(newExpression, parameter);
         }

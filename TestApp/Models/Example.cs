@@ -13,7 +13,7 @@ public class Example
     [PagedRequestKey("date")]
     public DateTime? Date { get; set; }
     [PagedRequestKey("enum")]
-    public ExampleEnum? Enum { get; set; }
+    public ExampleEnum Enum { get; set; }
     [PagedRequestKey("decimal")]
     public decimal? Decimal { get; set; }
     [PagedRequestKey("decimals")]
