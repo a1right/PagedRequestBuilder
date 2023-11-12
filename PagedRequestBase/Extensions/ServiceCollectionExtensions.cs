@@ -16,6 +16,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddPagedQueryBuilder(this IServiceCollection services, Action<PaginationConfig>? config = null)
     {
         services.AddSingleton<IRequestPropertyMapper, RequestPropertyMapper>();
+        services.AddSingleton<IQueryStringParametersMapper, QueryStringParametersMapper>();
         services.AddBuilders();
         services.AddCaching();
         services.AddMethodInfo();

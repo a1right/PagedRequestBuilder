@@ -31,6 +31,7 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
         _queryFilterCache = queryFilterCache;
         _methodCallExpressionBuilder = methodCallExpressionBuilder;
     }
+
     public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase request)
     {
         var simpleFilters = BuildSimpleFilters(request.Filters);
@@ -91,7 +92,7 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
             var constant = Expression.Constant(providedValue, typeof(ValueParseResult));
             var constantClojure = Expression.Property(constant, nameof(ValueParseResult.Value));
             var converted = Expression.Convert(constantClojure, providedValue.ValueType);
-            if (assignablePropertyType.IsEnum || Nullable.GetUnderlyingType(assignablePropertyType).IsEnum)
+            if (assignablePropertyType.IsEnum || Nullable.GetUnderlyingType(assignablePropertyType) != null && Nullable.GetUnderlyingType(assignablePropertyType).IsEnum)
             {
                 HandleEnum(ref propertySelector, ref converted, entry.Operation);
             }

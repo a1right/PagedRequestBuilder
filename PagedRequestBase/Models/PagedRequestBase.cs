@@ -14,6 +14,7 @@ public abstract class PagedRequestBase
     public List<List<FilterEntry>> ComplexFilters { get; set; } = new();
     public List<SorterEntry> Sorters { get; set; } = new();
     public List<string> SortKeys { get; set; } = new();
+    public string? Query { get; set; }
     public int Page
     {
         get => _page ?? PaginationSetting.DefaultPageNumber;
@@ -24,4 +25,9 @@ public abstract class PagedRequestBase
         get => _size ?? PaginationSetting.DefaultPageSize;
         set => _size = value;
     }
+}
+
+internal class PagedRequestModel : PagedRequestBase
+{
+
 }
