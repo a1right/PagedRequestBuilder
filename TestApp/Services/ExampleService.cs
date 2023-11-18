@@ -21,25 +21,25 @@ public class ExampleService : IExampleService
         _queryMongoBuilder = queryMongoBuilder;
     }
 
-    public async Task<PagedResponse<ExampleDto>> GetPaged(GetPagedExampleRequest? request)
+    public async Task<PagedResponse<ExampleDto>> GetPaged(PagedRequestBase? request)
     {
         request ??= new();
         var query = _context.Set<Example>().AsQueryable();
         query = _queryBuilder
-            .BuildQuery(query, request);
+            .BuildQuery(query, ref request);
 
         var pagedQuery = query
-            .Paginate(request)
+            .Paginate(request.Value)
             .Select(x => x.Map<Example, ExampleDto>());
 
         var total = await query.CountAsync();
         var data = await pagedQuery.ToListAsync();
 
-        return data.ToPagedResponse(request.Page, request.Size, total);
+        return data.ToPagedResponse(request.Value.Page, request.Value.Size, total);
     }
 }
 
 public interface IExampleService
 {
-    Task<PagedResponse<ExampleDto>> GetPaged(GetPagedExampleRequest? request);
+    Task<PagedResponse<ExampleDto>> GetPaged(PagedRequestBase? request);
 }

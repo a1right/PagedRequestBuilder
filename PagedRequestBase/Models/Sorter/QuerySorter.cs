@@ -3,17 +3,14 @@ using System.Linq.Expressions;
 
 namespace PagedRequestBuilder.Models.Sorter;
 
-internal class QuerySorter<T> : IQuerySorter<T>
+internal struct QuerySorter<T>
 {
-    private readonly Expression<Func<T, object>> _keySelector;
-    private readonly bool _descending;
-
-    public bool Descending => _descending;
-    public Expression<Func<T, object>> Sorter => _keySelector;
+    public bool Descending { get; }
+    public Expression<Func<T, object>> Sorter { get; }
 
     public QuerySorter(Expression<Func<T, object>> keySelector, bool descending = false)
     {
-        _keySelector = keySelector;
-        _descending = descending;
+        Sorter = keySelector;
+        Descending = descending;
     }
 }

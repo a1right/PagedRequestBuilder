@@ -1,7 +1,15 @@
-﻿namespace PagedRequestBuilder.Models.Sorter;
+﻿using System.Collections.Generic;
 
-public class SorterEntry
+namespace PagedRequestBuilder.Models.Sorter;
+
+public struct SorterEntry
 {
+    public SorterEntry(string property, bool descending = false)
+    {
+        Property = property;
+        Descending = descending;
+    }
+
     public string Property { get; set; } = string.Empty;
     public bool Descending { get; set; }
 
@@ -32,6 +40,29 @@ public class SorterEntry
                 hashCode = Property.GetHashCode();
 
             hashCode += Descending.GetHashCode();
+
+            return hashCode == 0 ? base.GetHashCode() : hashCode;
+        }
+    }
+}
+
+public class SorterEntryEqualityComparer : IEqualityComparer<SorterEntry>
+{
+    public bool Equals(SorterEntry x, SorterEntry y)
+    {
+        return x.Property == y.Property &&
+            x.Descending == y.Descending;
+    }
+
+    public int GetHashCode(SorterEntry obj)
+    {
+        unchecked
+        {
+            var hashCode = 0;
+            if (obj.Property is not null)
+                hashCode = obj.Property.GetHashCode();
+
+            hashCode += obj.Descending.GetHashCode();
 
             return hashCode == 0 ? base.GetHashCode() : hashCode;
         }

@@ -4,10 +4,14 @@ using System.Text.Json;
 namespace PagedRequestBuilder.Common;
 internal class QueryStringParametersMapper : IQueryStringParametersMapper
 {
-    public void MapQueryStringParams(PagedRequestBase request)
+    public void MapQueryStringParams(ref PagedRequestBase? request)
     {
-        if (request.Query is null)
+        if (request is null)
             return;
+
+        if (request.Value.Query is null)
+            return;
+
         var options = new JsonSerializerOptions()
         {
             AllowTrailingCommas = true,
@@ -15,15 +19,10 @@ internal class QueryStringParametersMapper : IQueryStringParametersMapper
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
         };
 
-        var queryStringRequest = JsonSerializer.Deserialize<PagedRequestModel>(request.Query, options);
+        var queryStringRequest = JsonSerializer.Deserialize<PagedRequestBase?>(request.Value.Query, options);
         if (queryStringRequest is null)
             return;
 
-        request.Filters.AddRange(queryStringRequest.Filters);
-        request.ComplexFilters.AddRange(queryStringRequest.ComplexFilters);
-        request.Sorters.AddRange(queryStringRequest.Sorters);
-        request.SortKeys.AddRange(queryStringRequest.SortKeys);
-        request.Page = queryStringRequest.Page;
-        request.Size = queryStringRequest.Size;
+        request = queryStringRequest;
     }
 }

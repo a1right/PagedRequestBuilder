@@ -1,39 +1,44 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Collections.Generic;
+using System.Text.Json.Nodes;
 
 namespace PagedRequestBuilder.Models.Filter;
 
-public class FilterEntry
+public struct FilterEntry
 {
-    public string Property { get; set; } = string.Empty;
-    public JsonNode? Value { get; set; }
-    public string? Operation { get; set; }
-
-    public override bool Equals(object? obj)
+    public FilterEntry()
     {
-        if (ReferenceEquals(this, obj))
-            return true;
-
-        if (obj is null)
-            return false;
-
-        if (obj is not FilterEntry other)
-            return false;
-
-        return
-            Property == other.Property &&
-            Value?.ToJsonString() == other.Value?.ToJsonString() &&
-            Operation == other?.Operation;
+        Property = string.Empty;
     }
 
-    public override int GetHashCode()
+    public string Property { get; set; }
+    public JsonNode? Value { get; set; }
+    public string? Operation { get; set; }
+}
+
+public class FilterEqualityComparers : IEqualityComparer<FilterEntry>
+{
+    public bool Equals(FilterEntry x, FilterEntry y)
     {
-        var hashCode = 0;
+        return x.Value?.ToJsonString() == y.Value?.ToJsonString() &&
+            x.Operation == y.Operation &&
+            x.Property == y.Property;
+    }
+
+    public int GetHashCode(FilterEntry obj)
+    {
         unchecked
         {
-            if (Property is not null)
-                hashCode += Property.GetHashCode();
-        }
+            var code = 0;
+            if (obj.Operation != null)
+                code += obj.Operation.GetHashCode();
 
-        return hashCode == 0 ? base.GetHashCode() : hashCode;
+            if (obj.Value != null)
+                code += obj.Value.ToJsonString().GetHashCode();
+
+            if (obj.Property != null)
+                code += obj.Property.GetHashCode();
+
+            return code == 0 ? base.GetHashCode() : code;
+        }
     }
 }

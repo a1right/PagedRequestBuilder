@@ -7,13 +7,11 @@ using PagedRequestBuilder.Infrastructure.Exceptions;
 using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Models.Filter;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace PagedRequestBuilder.Builders;
 
-public class FilterBuilder<T> : IFilterBuilder<T> where T : class
+internal class FilterBuilder<T> : IFilterBuilder<T> where T : class
 {
     private readonly IPagedRequestValueParser _valueParser;
     private readonly IRequestPropertyMapper _propertyMapper;
@@ -32,54 +30,59 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
         _methodCallExpressionBuilder = methodCallExpressionBuilder;
     }
 
-    public IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase request)
+    public QueryFilter<T>[] BuildFilters(ref PagedRequestBase? request)
     {
-        var simpleFilters = BuildSimpleFilters(request.Filters);
-        var complexFilters = BuildComplexFilters(request.ComplexFilters);
+        if (request is null)
+            return Array.Empty<QueryFilter<T>>();
 
-        return simpleFilters.Concat(complexFilters);
+        var result = new QueryFilter<T>[request.Value.Filters.Length + request.Value.ComplexFilters.Length];
+        var simpleFilters = BuildSimpleFilters(request.Value.Filters, result);
+        var complexFilters = BuildComplexFilters(request.Value.ComplexFilters, result, simpleFilters.Length);
+
+        return result;
     }
 
-    private IEnumerable<QueryFilter<T>> BuildSimpleFilters(IEnumerable<FilterEntry> entries)
+    private QueryFilter<T>[] BuildSimpleFilters(FilterEntry[] entries, QueryFilter<T>[] result)
     {
-        foreach (var filter in entries)
+        for (var index = 0; index < entries.Length; index++)
         {
-            if (filter is null)
-                continue;
-
-            var cached = _queryFilterCache.Get(filter);
+            var filter = entries[index];
+            var cached = _queryFilterCache.Get(ref entries[index]);
             if (cached is not null)
             {
-                yield return (QueryFilter<T>)cached;
+                result[index] = cached.Value;
                 continue;
             }
 
-            var predicate = GetPredicate(filter);
+            var predicate = GetPredicate(ref filter);
 
             if (predicate != null)
             {
                 var queryFilter = new QueryFilter<T>(predicate);
-                yield return queryFilter;
-                _queryFilterCache.Set(filter, queryFilter);
+                result[index] = queryFilter;
+                _queryFilterCache.Set(ref filter, ref queryFilter);
             }
         }
+
+        return result;
     }
 
-    private IEnumerable<QueryFilter<T>> BuildComplexFilters(IEnumerable<IEnumerable<FilterEntry>> entries)
+    private QueryFilter<T>[] BuildComplexFilters(FilterEntry[][] entries, QueryFilter<T>[] result, int startIndex = 0)
     {
-        foreach (var complexFilter in entries)
+        for (var index = 0; index < entries.Length; index++)
         {
             QueryFilter<T>? aggregate = null;
-
-            foreach (var filter in BuildSimpleFilters(complexFilter))
+            foreach (var filter in BuildSimpleFilters(entries[index], new QueryFilter<T>[entries[index].Length]))
                 aggregate |= filter;
 
             if (aggregate is not null)
-                yield return aggregate;
+                result[startIndex++] = aggregate.Value;
         }
+
+        return result;
     }
 
-    private Expression<Func<T, bool>>? GetPredicate(FilterEntry entry)
+    private Expression<Func<T, bool>>? GetPredicate(ref FilterEntry entry)
     {
         try
         {
@@ -147,7 +150,7 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
     };
 }
 
-public interface IFilterBuilder<T> where T : class
+internal interface IFilterBuilder<T> where T : class
 {
-    IEnumerable<IQueryFilter<T>> BuildFilters(PagedRequestBase request);
+    QueryFilter<T>[] BuildFilters(ref PagedRequestBase? request);
 }

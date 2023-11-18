@@ -1,19 +1,32 @@
 ﻿using PagedRequestBuilder.Common;
 using PagedRequestBuilder.Models.Filter;
 using PagedRequestBuilder.Models.Sorter;
-using System.Collections.Generic;
+using System;
 
 namespace PagedRequestBuilder.Models;
-
-public abstract class PagedRequestBase
+public struct PagedRequestBase
 {
     private int? _size;
     private int? _page;
+    public PagedRequestBase()
+    {
 
-    public List<FilterEntry> Filters { get; set; } = new();
-    public List<List<FilterEntry>> ComplexFilters { get; set; } = new();
-    public List<SorterEntry> Sorters { get; set; } = new();
-    public List<string> SortKeys { get; set; } = new();
+    }
+    public PagedRequestBase(FilterEntry[] filters, FilterEntry[][] complexFilters, SorterEntry[] sorters, string[] sortKeys, string? query, int? page, int? size)
+    {
+        Filters = filters;
+        ComplexFilters = complexFilters;
+        Sorters = sorters;
+        SortKeys = sortKeys;
+        _page = page;
+        _size = size;
+        Query = query;
+    }
+
+    public FilterEntry[] Filters { get; set; } = Array.Empty<FilterEntry>();
+    public FilterEntry[][] ComplexFilters { get; set; } = Array.Empty<FilterEntry[]>();
+    public SorterEntry[] Sorters { get; set; } = Array.Empty<SorterEntry>();
+    public string[] SortKeys { get; set; } = Array.Empty<string>();
     public string? Query { get; set; }
     public int Page
     {
@@ -25,9 +38,4 @@ public abstract class PagedRequestBase
         get => _size ?? PaginationSetting.DefaultPageSize;
         set => _size = value;
     }
-}
-
-internal class PagedRequestModel : PagedRequestBase
-{
-
 }

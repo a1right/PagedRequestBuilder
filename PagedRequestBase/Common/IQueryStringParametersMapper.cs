@@ -3,5 +3,5 @@
 namespace PagedRequestBuilder.Common;
 internal interface IQueryStringParametersMapper
 {
-    void MapQueryStringParams(PagedRequestBase request);
+    void MapQueryStringParams(ref PagedRequestBase? request);
 }

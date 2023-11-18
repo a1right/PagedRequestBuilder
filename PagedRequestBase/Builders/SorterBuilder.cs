@@ -3,13 +3,11 @@ using PagedRequestBuilder.Common;
 using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Models.Sorter;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace PagedRequestBuilder.Builders;
 
-public class SorterBuilder<T> : ISorterBuilder<T> where T : class
+internal class SorterBuilder<T> : ISorterBuilder<T> where T : class
 {
     private readonly IRequestPropertyMapper _propertyMapper;
     private readonly IQuerySorterCache<T> _querySorterCache;
@@ -20,62 +18,63 @@ public class SorterBuilder<T> : ISorterBuilder<T> where T : class
         _querySorterCache = querySorterCache;
     }
 
-    public IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase request)
+    public QuerySorter<T>[] BuildSorters(ref PagedRequestBase? request)
     {
-        var sortersByEntry = BuildSortersFromEntries(request.Sorters);
-        var sortersByKeys = BuildSortersFromKeys(request.SortKeys);
+        if (request is null)
+            return Array.Empty<QuerySorter<T>>();
 
-        return sortersByEntry.Concat(sortersByKeys);
+        var result = new QuerySorter<T>[request.Value.Sorters.Length + request.Value.SortKeys.Length];
+        var sortersByEntry = BuildSortersFromEntries(request.Value.Sorters, result);
+        var sortersByKeys = BuildSortersFromKeys(request.Value.SortKeys, result, request.Value.Sorters.Length);
+
+        return result;
     }
 
-    private IEnumerable<QuerySorter<T>> BuildSortersFromEntries(IEnumerable<SorterEntry> entries)
+    private QuerySorter<T>[] BuildSortersFromEntries(SorterEntry[] entries, QuerySorter<T>[] result, int startIndex = 0)
     {
-        foreach (var sorter in entries)
+        for (var index = 0; index < entries.Length; index++)
         {
-            if (sorter is null)
-                continue;
-
-            var cached = _querySorterCache.Get(sorter);
+            var cached = _querySorterCache.Get(ref entries[index]);
             if (cached is not null)
             {
-                yield return (QuerySorter<T>)cached;
+                result[startIndex++] = cached.Value;
                 continue;
             }
 
-            var keySelector = GetKeySelector(sorter);
+            var keySelector = GetKeySelector(ref entries[index]);
             if (keySelector != null)
             {
-                var querySorter = new QuerySorter<T>(keySelector, sorter.Descending);
-                yield return querySorter;
-                _querySorterCache.Set(sorter, querySorter);
+                var querySorter = new QuerySorter<T>(keySelector, entries[index].Descending);
+                result[startIndex++] = querySorter;
+                _querySorterCache.Set(ref entries[index], ref querySorter);
             }
         }
+
+        return result;
     }
 
-    private IEnumerable<QuerySorter<T>> BuildSortersFromKeys(IEnumerable<string> sortKeys)
+    private QuerySorter<T>[] BuildSortersFromKeys(string[] sortKeys, QuerySorter<T>[] result, int startIndex = 0)
     {
-        var sorters = new List<SorterEntry>(sortKeys.Count());
-
-        foreach (var sorterKey in sortKeys)
+        var sorters = new SorterEntry[sortKeys.Length];
+        for (var index = 0; index < sortKeys.Length; index++)
         {
-            if (string.IsNullOrEmpty(sorterKey))
+            if (string.IsNullOrEmpty(sortKeys[index]))
                 continue;
 
-            var isDescending = sorterKey.StartsWith("-");
+            var isDescending = sortKeys[index].StartsWith("-");
 
-            var sorter = new SorterEntry()
+            sorters[index] = new SorterEntry()
             {
-                Property = isDescending ? sorterKey[1..] : sorterKey,
+                Property = isDescending ? sortKeys[index][1..] : sortKeys[index],
                 Descending = isDescending
             };
 
-            sorters.Add(sorter);
         }
 
-        return BuildSortersFromEntries(sorters);
+        return BuildSortersFromEntries(sorters, result, startIndex);
     }
 
-    private Expression<Func<T, object>>? GetKeySelector(SorterEntry entry)
+    private Expression<Func<T, object>>? GetKeySelector(ref SorterEntry entry)
     {
         var parameter = Expression.Parameter(typeof(T), "x");
         var propertySelector = GetPropertySelector(entry.Property, parameter);
@@ -101,7 +100,7 @@ public class SorterBuilder<T> : ISorterBuilder<T> where T : class
     }
 }
 
-public interface ISorterBuilder<T> where T : class
+internal interface ISorterBuilder<T> where T : class
 {
-    IEnumerable<IQuerySorter<T>> BuildSorters(PagedRequestBase? request);
+    QuerySorter<T>[] BuildSorters(ref PagedRequestBase? request);
 }

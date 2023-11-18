@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PagedRequestBuilder.Builders;
 using PagedRequestBuilder.Extensions;
 using PagedRequestBuilder.Models;
+using PagedRequestBuilder.Models.Filter;
 using PagedRequestBuilder.Services;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -18,7 +19,7 @@ public class Test
     private IPagedQueryBuilder<Example> _builder;
     private IServiceScope _scope;
     private IQueryable<Example> _query;
-    private GetPagedExampleRequest _request;
+    private PagedRequestBase? _request;
 
     [GlobalSetup]
     public void Setup()
@@ -35,9 +36,9 @@ public class Test
         _builder = _scope.ServiceProvider.GetService<IPagedQueryBuilder<Example>>();
         _query = _scope.ServiceProvider.GetService<ExampleContext>().Examples.AsQueryable();
 
-        _request = new GetPagedExampleRequest()
+        _request = new PagedRequestBase()
         {
-            Filters = new()
+            Filters = new FilterEntry[]
             {
                 new () { Property = "decimals", Value = JsonNode.Parse( JsonSerializer.Serialize(new []{ 0.5m,0.6m,0.4m,0.1m})), Operation = "in"},
                 new () { Property = "string", Value = JsonNode.Parse(JsonSerializer.Serialize("ing 2")), Operation = "contains"},
@@ -62,7 +63,7 @@ public class Test
 
         for (var i = 1; i < 100; i++)
         {
-            query = _builder.BuildQuery(_query, _request);
+            query = _builder.BuildQuery(_query, ref _request);
         }
 
         Console.WriteLine(query.ToQueryString());

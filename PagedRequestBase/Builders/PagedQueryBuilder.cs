@@ -21,13 +21,13 @@ internal class PagedQueryBuilder<T> : IPagedQueryBuilder<T>
         _parametersMapper = parametersMapper;
     }
 
-    public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request) where TQueryable : IQueryable<T>
+    public TQueryable BuildQuery<TQueryable>(TQueryable query, ref PagedRequestBase? request) where TQueryable : IQueryable<T>
     {
-        _parametersMapper.MapQueryStringParams(request);
+        _parametersMapper.MapQueryStringParams(ref request);
 
         var result = query
-            .Where(_filterBuilder.BuildFilters(request))
-            .OrderBy(_sorterBuilder.BuildSorters(request));
+            .Where(_filterBuilder.BuildFilters(ref request))
+            .OrderBy(_sorterBuilder.BuildSorters(ref request));
 
         return (TQueryable)result;
     }
@@ -35,5 +35,5 @@ internal class PagedQueryBuilder<T> : IPagedQueryBuilder<T>
 
 public interface IPagedQueryBuilder<T>
 {
-    TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request) where TQueryable : IQueryable<T>;
+    TQueryable BuildQuery<TQueryable>(TQueryable query, ref PagedRequestBase? request) where TQueryable : IQueryable<T>;
 }

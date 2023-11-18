@@ -1,5 +1,4 @@
 ﻿using PagedRequestBuilder.Attributes;
-using PagedRequestBuilder.Models;
 
 namespace PagedRequestBuilder.Tests.Infrastructure.Builders.FilterBuilder;
 public class FilterBuilderTestClass
@@ -18,5 +17,3 @@ public class FilterBuilderTestClass
     [PagedRequestKey(GuidPagedKey)]
     public Guid Guid { get; set; }
 }
-
-internal class FilterBuilderTestRequest : PagedRequestBase { }

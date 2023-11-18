@@ -1,5 +1,8 @@
-﻿using System;
+﻿using PagedRequestBuilder.Models;
+using System;
 using System.Runtime.CompilerServices;
+using System.Web.Http.Controllers;
+using System.Web.Http.ModelBinding;
 
 namespace PagedRequestBuilder.Attributes;
 
@@ -12,5 +15,14 @@ public class PagedRequestKeyAttribute : Attribute
     {
         RequestKey = key;
         TargetProperty = property;
+    }
+}
+
+public class PagedRequestModelBinder : IModelBinder
+{
+    public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
+    {
+        bindingContext.Model = new PagedRequestBase();
+        return true;
     }
 }

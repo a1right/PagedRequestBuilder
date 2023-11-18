@@ -5,18 +5,22 @@ namespace PagedRequestBuilder.Cache;
 
 internal class QueryFilterCache<T> : IQueryFilterCache<T>
 {
-    private readonly ConcurrentDictionary<FilterEntry, IQueryFilter<T>> _queryFilterCache = new();
-    public IQueryFilter<T>? Get(FilterEntry entry)
+    private readonly ConcurrentDictionary<FilterEntry, QueryFilter<T>?> _queryFilterCache;
+    public QueryFilterCache()
+    {
+        _queryFilterCache = new(new FilterEqualityComparers());
+    }
+    public QueryFilter<T>? Get(ref FilterEntry entry)
     {
         _queryFilterCache.TryGetValue(entry, out var compiledFilter);
         return compiledFilter;
     }
 
-    public void Set(FilterEntry entry, IQueryFilter<T> filter) => _queryFilterCache.TryAdd(entry, filter);
+    public void Set(ref FilterEntry entry, ref QueryFilter<T> filter) => _queryFilterCache.TryAdd(entry, filter);
 }
 
-public interface IQueryFilterCache<T>
+internal interface IQueryFilterCache<T>
 {
-    IQueryFilter<T>? Get(FilterEntry entry);
-    void Set(FilterEntry entry, IQueryFilter<T> filter);
+    QueryFilter<T>? Get(ref FilterEntry entry);
+    void Set(ref FilterEntry entry, ref QueryFilter<T> filter);
 }

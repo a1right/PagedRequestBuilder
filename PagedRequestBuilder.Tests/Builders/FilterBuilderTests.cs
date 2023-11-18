@@ -4,6 +4,7 @@ using PagedRequestBuilder.Cache;
 using PagedRequestBuilder.Common;
 using PagedRequestBuilder.Common.MethodInfoProvider;
 using PagedRequestBuilder.Common.ValueParser;
+using PagedRequestBuilder.Models;
 using PagedRequestBuilder.Models.Filter;
 using PagedRequestBuilder.Tests.Infrastructure.Builders.FilterBuilder;
 using System.Linq.Expressions;
@@ -20,10 +21,10 @@ public class FilterBuilderTests
         var filterCacheMock = new Mock<IQueryFilterCache<FilterBuilderTestClass>>();
         filterCacheMock
             .Setup(x => x.Get(new()))
-            .Returns<IQueryFilter<FilterBuilderTestClass>>(null);
+            .Returns<QueryFilter<FilterBuilderTestClass>>(null);
 
         filterCacheMock
-            .Setup(x => x.Set(null, null));
+            .Setup(x => x.Set(new(), new()));
 
         var methodInfoCacheMock = new Mock<IMethodInfoCache>();
         methodInfoCacheMock
@@ -65,9 +66,9 @@ public class FilterBuilderTests
     public void BuildFilters_ReturnsValidFilters(string property, object value, string operation)
     {
         //arrange
-        var request = new FilterBuilderTestRequest()
+        PagedRequestBase? request = new Models.PagedRequestBase()
         {
-            Filters = new()
+            Filters = new FilterEntry[]
             {
                 new()
                 {
@@ -78,7 +79,7 @@ public class FilterBuilderTests
             }
         };
 
-        var actual = _builder.BuildFilters(request).First();
+        var actual = _builder.BuildFilters(ref request).First();
         var expected = GetExpectedPredicate(property, operation, value);
 
         var equals = actual.ToString() == expected.ToString();

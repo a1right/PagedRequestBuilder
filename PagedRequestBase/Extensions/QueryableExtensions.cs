@@ -8,48 +8,50 @@ namespace PagedRequestBuilder.Extensions;
 
 internal static class QueryableExtensions
 {
-    public static IQueryable<T> Where<T>(this IQueryable<T> query, IEnumerable<IQueryFilter<T>> filters)
+    public static IQueryable<T> Where<T>(this IQueryable<T> query, QueryFilter<T>[] filters)
     {
-        foreach (var filter in filters)
+        for (var index = 0; index < filters.Length; index++)
         {
-            query = query.Where(filter.Filter);
+            var filter = filters[index];
+            query = query.Where(ref filter);
         }
 
         return query;
     }
 
-    public static IQueryable<T> Where<T>(this IQueryable<T> query, IQueryFilter<T> filter)
+    public static IQueryable<T> Where<T>(this IQueryable<T> query, ref QueryFilter<T> filter)
     {
         query = query.Where(filter.Filter);
 
         return query;
     }
 
-    public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, IQuerySorter<T> sorter) => sorter.Descending
+    public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, ref QuerySorter<T> sorter) => sorter.Descending
         ? query.OrderByDescending(sorter.Sorter)
         : query.OrderBy(sorter.Sorter);
 
-    public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, IEnumerable<IQuerySorter<T>> sorters)
+    public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, QuerySorter<T>[] sorters)
     {
         var firstSort = true;
         IOrderedQueryable<T> orderedQuery;
-        foreach (var sorter in sorters)
+        for (var index = 0; index < sorters.Length; index++)
         {
+            var sorter = sorters[index];
             if (firstSort)
             {
-                query = query.OrderBy(sorter);
+                query = query.OrderBy(ref sorter);
                 firstSort = false;
                 continue;
             }
 
             orderedQuery = (IOrderedQueryable<T>)query;
-            query = orderedQuery.ThenBy(sorter);
+            query = orderedQuery.ThenBy(ref sorter);
         }
 
         return query;
     }
 
-    public static IQueryable<T> ThenBy<T>(this IOrderedQueryable<T> query, IQuerySorter<T> sorter)
+    public static IQueryable<T> ThenBy<T>(this IOrderedQueryable<T> query, ref QuerySorter<T> sorter)
     {
         return sorter.Descending ? query.ThenByDescending(sorter.Sorter) : query.ThenBy(sorter.Sorter);
     }

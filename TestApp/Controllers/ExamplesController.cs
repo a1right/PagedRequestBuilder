@@ -15,8 +15,8 @@ public class ExamplesController : ControllerBase
         _exampleService = exampleService;
     }
 
-    [HttpGet("relational")]
-    public async Task<IActionResult> GetPagedRelational([FromQuery] GetPagedExampleRequest? request)
+    [HttpPost("relational")]
+    public async Task<IActionResult> GetPagedRelational([FromBody] PagedRequestBase? request)
     {
         try
         {
