@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Nodes;
+﻿using System.Collections.Generic;
+using System.Text.Json.Nodes;
 
 namespace PagedRequestBuilder.Models.Filter;
 
@@ -36,4 +37,16 @@ public class FilterEntry
 
         return hashCode == 0 ? base.GetHashCode() : hashCode;
     }
+}
+
+public class ComplexFilterEntry : FilterEntry
+{
+    public List<FilterEntry> Filters { get; set; } = [];
+    public FilterChain Chain { get; set; } = FilterChain.And;
+}
+
+public enum FilterChain
+{
+    Or,
+    And
 }

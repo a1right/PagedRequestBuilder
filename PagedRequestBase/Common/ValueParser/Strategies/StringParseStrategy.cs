@@ -27,7 +27,13 @@ internal class StringParseStrategy : IValueParseStrategy
         if (assignablePropertyType == typeof(DateTime))
             return ValueParseResult.New(DateTime.Parse(typedValue).ToUniversalTime());
 
+        if (assignablePropertyType == typeof(DateTime?))
+            return ValueParseResult.New(DateTime.Parse(typedValue).ToUniversalTime());
+
         if (assignablePropertyType == typeof(Guid))
+            return ValueParseResult.New(Guid.Parse(typedValue));
+
+        if (assignablePropertyType == typeof(Guid?))
             return ValueParseResult.New(Guid.Parse(typedValue));
 
         if (assignablePropertyType == typeof(string))

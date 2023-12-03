@@ -23,6 +23,7 @@ internal class PagedQueryBuilder<T> : IPagedQueryBuilder<T>
 
     public TQueryable BuildQuery<TQueryable>(TQueryable query, PagedRequestBase request) where TQueryable : IQueryable<T>
     {
+
         _parametersMapper.MapQueryStringParams(request);
 
         var result = query

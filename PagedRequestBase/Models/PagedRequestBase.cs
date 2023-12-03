@@ -10,10 +10,10 @@ public abstract class PagedRequestBase
     private int? _size;
     private int? _page;
 
-    public List<FilterEntry> Filters { get; set; } = new();
-    public List<List<FilterEntry>> ComplexFilters { get; set; } = new();
-    public List<SorterEntry> Sorters { get; set; } = new();
-    public List<string> SortKeys { get; set; } = new();
+    public List<FilterEntry> Filters { get; set; } = [];
+    public List<List<FilterEntry>> ComplexFilters { get; set; } = [];
+    public List<SorterEntry> Sorters { get; set; } = [];
+    public List<string> SortKeys { get; set; } = [];
     public string? Query { get; set; }
     public int Page
     {

@@ -92,10 +92,12 @@ public class FilterBuilder<T> : IFilterBuilder<T> where T : class
             var constant = Expression.Constant(providedValue, typeof(ValueParseResult));
             var constantClojure = Expression.Property(constant, nameof(ValueParseResult.Value));
             var converted = Expression.Convert(constantClojure, providedValue.ValueType);
-            if (assignablePropertyType.IsEnum || Nullable.GetUnderlyingType(assignablePropertyType) != null && Nullable.GetUnderlyingType(assignablePropertyType).IsEnum)
-            {
+
+            if (Nullable.GetUnderlyingType(assignablePropertyType) is not null)
+                propertySelector = Expression.Convert(propertySelector, Nullable.GetUnderlyingType(assignablePropertyType));
+
+            if (assignablePropertyType.IsEnum || Nullable.GetUnderlyingType(assignablePropertyType)?.IsEnum == true)
                 HandleEnum(ref propertySelector, ref converted, entry.Operation);
-            }
 
             var newExpression = GetOperationExpression(propertySelector, converted, entry.Operation, assignablePropertyType);
             return Expression.Lambda<Func<T, bool>>(newExpression, parameter);

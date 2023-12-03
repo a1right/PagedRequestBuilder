@@ -4,6 +4,7 @@ namespace PagedRequestBuilder.Models;
 
 public class ExampleDto
 {
+    public int Id { get; set; }
     public string? String { get; set; }
     public string[]? Strings { get; set; }
     public DateTime Date { get; set; }
